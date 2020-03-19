@@ -10,8 +10,10 @@
 
 export default {
   auth: false,  // this page does not require authentication to view
-  //components: {
-  //},
+  middleware ({ store, redirect }) {
+    // this is hackish to redirect to the about page
+    return redirect('/about')
+  }
 }
 </script>
 
