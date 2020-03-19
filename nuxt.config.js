@@ -35,35 +35,41 @@ export default {
       local: {
         endpoints: {
           login: {
-            url: '/api/api-auth/login/',
+            url: '/api/api-token-auth/?format=json',
             method: 'post',
-            propertyName: false,
-            withCredentials: true,
-            xsrfCookieName: 'csrftoken',
-            xsrfHeaderName: "X-CSRFTOKEN",
+            propertyName: 'token',
+            //withCredentials: true,
+            //xsrfCookieName: 'csrftoken',
+            //xsrfHeaderName: "X-CSRFTOKEN",
             headers: {
               'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*'
-            }
+            //  'Access-Control-Allow-Origin': '*'
+              }
           },
-          logout: {
-            url: '/api/api-auth/logout/',
-            method: 'post',
-            withCredentials: true,
-            xsrfCookieName: 'csrftoken',
-            xsrfHeaderName: "X-CSRFTOKEN"
-          },
+          //logout: {
+          //  url: '/api/api-auth/logout/',
+          //  method: 'post',
+          //  withCredentials: true,
+          //  xsrfCookieName: 'csrftoken',
+          //  xsrfHeaderName: "X-CSRFTOKEN"
+          //},
           user: {
             url: '/api/user/?format=json',
             method: 'get',
-            withCredentials: true,
-            xsrfCookieName: 'csrftoken',
-            xsrfHeaderName: "X-CSRFTOKEN"
+            propertyName: false
+            //withCredentials: true,
+            //xsrfCookieName: 'csrftoken',
+            //xsrfHeaderName: "X-CSRFTOKEN"
           },
         },
-        tokenRequired: false,
-        tokenType: false,
-        redirect: {home: "/about"}
+        tokenRequired: true,
+        tokenType: 'JWT',
+        watchLoggedIn: true,
+        rewriteRedirects: true,
+        redirect: {
+          home: "/about",
+          logout: "/about"
+        }
       }
     }
   },
@@ -99,24 +105,19 @@ export default {
   */
   axios: {
     proxy: true,
-    baseURL: 'http://localhost'
+    //baseURL: 'http://localhost'
   },
   /*
   ** Proxy configuration
   */
-  //proxy: {
-  //  '/api': {
-  //    target: 'http://localhost',
-  //    pathRewrite: {
-  //      '^/api': '/api'
-  //    }
-  //  }
-  //},
+  proxy: {
+    '/api': 'http://localhost'
+  },
   /*
   ** Router configuration
   */
   router: {
-    middleware: 'auth'
+    middleware: ['auth']
   },
   /*
   ** Build configuration
