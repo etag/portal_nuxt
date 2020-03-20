@@ -49,6 +49,7 @@ export default {
           //logout: {
           //  url: '/api/api-auth/logout/',
           //  method: 'post',
+          //  propertyName: false
           //  withCredentials: true,
           //  xsrfCookieName: 'csrftoken',
           //  xsrfHeaderName: "X-CSRFTOKEN"
@@ -56,7 +57,9 @@ export default {
           user: {
             url: '/api/user/?format=json',
             method: 'get',
-            propertyName: false
+            propertyName: false,
+            tokenRequired: true,
+            tokenType: 'JWT',
             //withCredentials: true,
             //xsrfCookieName: 'csrftoken',
             //xsrfHeaderName: "X-CSRFTOKEN"
