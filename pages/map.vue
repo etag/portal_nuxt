@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="map-wrap" style="height: 100vh; width: 100%;">
+    <div id="map-wrap" style="height: 90vh; width: 100%;">
         <l-map ref="map" :zoom="15" :center="center" >
           <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
           <l-marker :lat-lng="center"></l-marker>
@@ -9,13 +9,13 @@
     <!-- Nav tabs -->
     <div class="leaflet-sidebar-tabs">
         <ul role="tablist"> <!-- top aligned tabs -->
-            <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-            <li class="disabled"><a href="#messages" role="tab"><i class="fa fa-envelope"></i></a></li>
-            <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
+            <li><a href="#home" role="tab"><i class="fa fa-bars fa-lg"></i></a></li>
+            <li><a href="#profile" role="tab"><i class="fa fa-user fa-lg"></i></a></li>
+            <li class="disabled"><a href="#messages" role="tab"><i class="fas fa-upload fa-lg"></i></a></li>
         </ul>
 
         <ul role="tablist"> <!-- bottom aligned tabs -->
-            <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
+            <li><a href="#help" role="tab"><i class="far fa-question-circle fa-lg"></i></a></li>
         </ul>
     </div>
 
@@ -36,6 +36,11 @@
         <div class="leaflet-sidebar-pane" id="profile">
             <h1 class="leaflet-sidebar-header">Profile<div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div></h1>
         </div>
+
+          <div class="leaflet-sidebar-pane" id="help">
+            <h1 class="leaflet-sidebar-header">Help<div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div></h1>
+        </div>
+    
     </div>
     </div>
     </div>
