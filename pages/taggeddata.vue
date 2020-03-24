@@ -12,8 +12,13 @@
     page: {{ page }}
     pagesize: {{ pageSize }}
     next: {{ nextUrl }}
+
+    <dropzone id="dzfile" ref="el" :options="options" :destroyDropzone="true"></dropzone>
+    <b-button type="button" @click="downloadTemplate()"><font-awesome-icon icon="file-csv" /><span>Download Template</span></b-button>
+    <b-button type="button" @click="downloadData()"><font-awesome-icon icon="cloud-download-alt" /><span>Download Data</span></b-button>
+
   </div>
-  <div>
+  <!--<div>
     <dropzone
       id="el"
       :options="dzoptions"
@@ -21,11 +26,12 @@
       v-on:vdropzone-sending="sendingEvent"
       v-on:vdropzone-success="successEvent"
     />
-  </div>
+  </div>-->
 </template>
 
 <script>
-
+import Dropzone from 'nuxt-dropzone'
+import 'nuxt-dropzone/dropzone.css'
 
 export default {
   async fetch ({ store, params, app: {$axios}}) {
@@ -45,11 +51,15 @@ export default {
   data() {
     return {
       api_callback: 'etagq.tasks.tasks.etagDataUpload',  // This is the full name of the upload task in cyberCommons
-      dzoptions: {
+      options: {
         dictDefaultMessage: 'Drop file here or click to upload.',
         acceptedFiles: '.csv',
-        withCredentials: true,
+        // withCredentials: true,
         // headers: {'X-CSRFToken': this.getCookie('csrftoken')},
+        headers: {
+          'X-CSRFToken': this.$auth.$storage.getCookie('csrftoken'),
+          'Authorization': this.$auth.$storage._state['_token.local']
+        },
         url: "/api/etag/file-upload/"
       }
     }
@@ -78,14 +88,31 @@ export default {
     },
   },
   mounted () {
-    const instance = this.$refs.el.dropzone
+    console.log(this.$auth.$storage.getCookie('csrftoken'))
   },
   methods: {
+    downloadFile(url,filename) {
+      this.$axios({
+        url: url,
+        method: 'GET',
+        responseType: 'blob',
+        headers: {Authorization: this.$auth.$storage._state['_token.local']}
+      }).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+      })
+    },
     downloadTemplate() {
-      location.href = 'api/etag/file-template/?filetype=animals'
+      this.downloadFile('api/etag/file-template/?filetype=animals', 'taggeddata_template.csv')
+      //location.href = 'api/etag/file-template/?filetype=animals'
     },
     downloadData() {
-      location.href = 'api/etag/file-download/?format=csv&filetype=animals'
+      this.downloadFile('api/etag/file-download/?format=csv&filetype=animals', 'taggeddata.csv')
+      //location.href = 'api/etag/file-download/?format=csv&filetype=animals'
     },
     failEvent(file, message, xhr) {
       console.log(file)

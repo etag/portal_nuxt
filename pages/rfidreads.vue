@@ -45,6 +45,47 @@
         return this.$store.state.tagReads.next
       },
     },
+    methods: {
+      downloadFile(url,filename) {
+        this.$axios({
+          url: url,
+          method: 'GET',
+          responseType: 'blob',
+          headers: {Authorization: this.$auth.$storage._state['_token.local']}
+        }).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', filename);
+          document.body.appendChild(link);
+          link.click();
+        })
+      },
+      downloadTemplate() {
+        this.downloadFile('api/etag/file-template/?filetype=tagss', 'rfidreads_template.csv')
+        //location.href = 'api/etag/file-template/?filetype=tags'
+      },
+      downloadData() {
+        this.downloadFile('api/etag/file-download/?format=csv&filetype=tags', 'rfidreads.csv')
+        //location.href = 'api/etag/file-download/?format=csv&filetype=tags'
+      },
+      failEvent(file, message, xhr) {
+        console.log(file)
+        console.log(message)
+        console.log(xhr)
+        // TODO: add failure handling
+        // See for available events: https://rowanwins.github.io/vue-dropzone/docs/dist/#/events
+      },
+      sendingEvent(file, xhr, formData) {
+        formData.append('callback', this.api_callback)
+        formData.append('filetype', this.filetype)
+      },
+      successEvent(file, response) {
+        console.log(file)
+        console.log(response)
+        // TODO: check status code returned in response. Success here does not mean callback was successfull
+      }
+    },
   }
 </script>
 

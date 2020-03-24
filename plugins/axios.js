@@ -6,5 +6,5 @@
 export default function ({ $axios }) {
   $axios.defaults.xsrfCookieName = 'csrftoken'
   $axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-  $axios.defaults.withCredentials = true
+  //$axios.defaults.withCredentials = true
 }
