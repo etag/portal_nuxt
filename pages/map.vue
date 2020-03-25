@@ -52,7 +52,7 @@
                 </select>
 
                 <h6>Tag ID</h6>
-                          <select v-model="selected" class="selectpicker" id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
+                          <select v-model="selected" class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
                     <option v-for="option in alltagid" v-bind:value="option.value">
                         {{ option.text }}
                     </option>
@@ -130,7 +130,20 @@ import 'bootstrap-select/dist/css/bootstrap-select.min.css';
             this.center = [position.coords.latitude, position.coords.longitude];
           })
         }
+      },
+      // display data
+      datatype_onChange(val) {
+          alert(val);
+        },
+      // display type
+      displaytype_onChange(val) {
+        alert(val);
       }
-    }
+    },
+    //updated () {
+		//$(this.$refs.select1).selectpicker('refresh');
+		//$(this.$refs.select2).selectpicker('refresh');
+    //},
+    
   }
 </script>
