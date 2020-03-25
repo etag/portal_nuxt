@@ -1,3 +1,27 @@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+
+<script>
+//function for time slider
+$(function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: new Date('2010-01-01').getTime() / 1000,
+      max: new Date('2014-01-01').getTime() / 1000,
+      step: 86400,
+      values: [ new Date('2010-01-01').getTime() / 1000, new Date('2014-01-01').getTime() / 1000 ],
+      slide: function( event, ui ) {
+        $( "#amount" ).val( (new Date(ui.values[ 0 ] *1000).toISOString().split("T",1) ) + " - " + (new Date(ui.values[ 1 ] *1000)).toISOString().split("T",1) );
+      }
+    });
+    $( "#amount" ).val( (new Date($( "#slider-range" ).slider( "values", 0 )*1000).toISOString().split("T",1)) +
+      " - " + (new Date($( "#slider-range" ).slider( "values", 1 )*1000)).toISOString().split("T",1));
+  });
+</script>
+
+
 <template>
   <div>
     <div id="map-wrap" style="height: 90vh; width: 100%;">
@@ -62,7 +86,11 @@
                               <option>User only</option>
                               <option>All data</option>
                 </select>
-                <br><div class="mt-3">Selected: <strong>{{ selected }}</strong></div>
+                <br><strong>Date</strong><input type="text" id="amount" style="border: 0; font-weight: bold;" size="40"/><br>
+                <div id="slider-range"></div><br>
+                <br><div class="mt-3">Selected: <strong>{{ selected }}</strong></div></br>
+                <button type="button" class="btn btn-primary btn-sm btn-block" onclick="apply_filters()"><strong>Apply Filters</strong></button>  
+
 
         </div>
 
@@ -84,6 +112,8 @@
     
   </div>
 </template>
+
+
 <script>
 import 'leaflet-sidebar-v2';
 import 'leaflet-sidebar-v2/css/leaflet-sidebar.css';
@@ -93,9 +123,14 @@ import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap-select';
 import 'bootstrap-select/dist/css/bootstrap-select.min.css';
+import VueSlider from 'vue-slider-component'
+import 'vue-slider-component/theme/default.css'
 
   export default {
     auth: false, // do not require to be logged in to view this page
+    components: {
+    VueSlider
+    },
     mounted() {
       var map =  this.$refs.map.mapObject;
       var sidebar = L.control.sidebar('sidebar').addTo(map);
@@ -138,8 +173,9 @@ import 'bootstrap-select/dist/css/bootstrap-select.min.css';
       // display type
       displaytype_onChange(val) {
         alert(val);
-      }
+      },
     },
+    
     //updated () {
 		//$(this.$refs.select1).selectpicker('refresh');
 		//$(this.$refs.select2).selectpicker('refresh');

@@ -18,11 +18,14 @@
     "bootstrap-select": "^1.13.12",
     "bootstrap-vue": "^2.8.0",
     "jquery": "^3.4.1",
+    "jquery-ui": "^1.12.1",
+    "jquery-ui-themes": "^1.12.0",
     "leaflet": "^1.6.0",
     "leaflet-sidebar-v2": "^3.2.2",
     "nuxt": "^2.12.0",
     "nuxt-dropzone": "^1.0.4",
     "nuxt-leaflet": "0.0.19",
+    "vue-slider-component": "^3.1.1",
     "vue2-leaflet": "^2.5.2"
   },
   "devDependencies": {}
