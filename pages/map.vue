@@ -1,26 +1,3 @@
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
-
-<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-
-<script>
-//function for time slider
-$(function() {
-    $( "#slider-range" ).slider({
-      range: true,
-      min: new Date('2010-01-01').getTime() / 1000,
-      max: new Date('2014-01-01').getTime() / 1000,
-      step: 86400,
-      values: [ new Date('2010-01-01').getTime() / 1000, new Date('2014-01-01').getTime() / 1000 ],
-      slide: function( event, ui ) {
-        $( "#amount" ).val( (new Date(ui.values[ 0 ] *1000).toISOString().split("T",1) ) + " - " + (new Date(ui.values[ 1 ] *1000)).toISOString().split("T",1) );
-      }
-    });
-    $( "#amount" ).val( (new Date($( "#slider-range" ).slider( "values", 0 )*1000).toISOString().split("T",1)) +
-      " - " + (new Date($( "#slider-range" ).slider( "values", 1 )*1000)).toISOString().split("T",1));
-  });
-</script>
-
 
 <template>
   <div>
@@ -86,8 +63,9 @@ $(function() {
                               <option>User only</option>
                               <option>All data</option>
                 </select>
-                <br><strong>Date</strong><input type="text" id="amount" style="border: 0; font-weight: bold;" size="40"/><br>
-                <div id="slider-range"></div><br>
+                <br><h6>Date</h6>
+                <div><h7>Date range: {{ date_value}}</h7></div>
+                <vue-slider v-model="date_value" :enable-cross="false"></vue-slider>
                 <br><div class="mt-3">Selected: <strong>{{ selected }}</strong></div></br>
                 <button type="button" class="btn btn-primary btn-sm btn-block" onclick="apply_filters()"><strong>Apply Filters</strong></button>  
 
@@ -134,13 +112,14 @@ import 'vue-slider-component/theme/default.css'
     mounted() {
       var map =  this.$refs.map.mapObject;
       var sidebar = L.control.sidebar('sidebar').addTo(map);
-      this.getGeoLocation();
+      this.getGeoLocation();  
     },
     data () {
       return {
         center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
         selected: [],
         datatype_sel: '',
+        date_value: [0, 30],
         allspecies:[
               {text:'Cardinal', value: 'Cardinal' },
               {text:'Blue Jay', value: 'Blue Jay' },
