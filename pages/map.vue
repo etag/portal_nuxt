@@ -3,7 +3,7 @@
   <div>
     <div id="map-wrap" style="height: 90vh; width: 100%;">
         <l-map ref="map" :zoom="15" :center="center" >
-          <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
+          <l-tile-layer ref="osm" :layerType="base"  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
           <l-marker :lat-lng="center"></l-marker>
         </l-map>
         <div id="sidebar" class="leaflet-sidebar collapsed">
@@ -64,7 +64,7 @@
                               <option>All data</option>
                 </select>
                 <br><h6>Date</h6>
-                <div><h7>Date range: {{ date_value}}</h7></div>
+                <div><h6>Date range: {{ date_value}}</h6></div>
                 <vue-slider v-model="date_value" :enable-cross="false"></vue-slider>
                 <br><div class="mt-3">Selected: <strong>{{ selected }}</strong></div></br>
                 <button type="button" class="btn btn-primary btn-sm btn-block" onclick="apply_filters()"><strong>Apply Filters</strong></button>  
@@ -101,8 +101,13 @@ import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap-select';
 import 'bootstrap-select/dist/css/bootstrap-select.min.css';
-import VueSlider from 'vue-slider-component'
-import 'vue-slider-component/theme/default.css'
+import VueSlider from 'vue-slider-component';
+import 'vue-slider-component/theme/default.css';
+
+// import json data for demo purpose only
+import readers_json from "../data/readers.json";
+import locations_json from '../data/locations.json';
+import reader_location_json from '../data/reader_location.json';
 
   export default {
     auth: false, // do not require to be logged in to view this page
@@ -110,12 +115,14 @@ import 'vue-slider-component/theme/default.css'
     VueSlider
     },
     mounted() {
-      var map =  this.$refs.map.mapObject;
-      var sidebar = L.control.sidebar('sidebar').addTo(map);
+      this.initMap();
+      //var map =  this.$refs.map.mapObject;
+      //var sidebar = L.control.sidebar('sidebar').addTo(map);
       this.getGeoLocation();  
     },
     data () {
       return {
+        sidebar: '',
         center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
         selected: [],
         datatype_sel: '',
@@ -135,9 +142,38 @@ import 'vue-slider-component/theme/default.css'
               {text:'06200005BA', value: '06200005BA'},
               {text:'TDP000064D', value: 'TDP000064D'}
         ],
+        readers: readers_json.results,
+        locations: locations_json.results,
+        reader_location: reader_location_json.results,
       }
     },
+    computed: {
+      map: function() {return this.$refs.map.mapObject;},
+      osm: function() {return this.$refs.osm;},
+      reader_location_dict: function() {
+          var new_dict = {};
+          var reader_id,location_id,r_lat,r_lon;
+          for (var i=0; i<this.reader_location.length; i++) {
+              reader_id = this.reader_location[i]['reader_id'];
+              location_id = this.reader_location[i]['location_id'];
+              //find lat,lon by location id
+              for (var j=0;j< this.locations.length;j++) {
+                  if (location_id == this.locations[j]['location_id']){
+                        r_lat = this.locations[j]['latitude'];
+                        r_lon = this.locations[j]['longitude'];
+                        new_dict[reader_id] = [r_lat,r_lon];
+                        break;
+                  };
+              }
+            }
+          return new_dict;
+        },
+    },
     methods: {
+      initMap: function() {
+        //var map =  this.$refs.map.mapObject;
+        this.sidebar = L.control.sidebar('sidebar').addTo(this.map);
+      },
       getGeoLocation () {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(position => {
@@ -147,11 +183,23 @@ import 'vue-slider-component/theme/default.css'
       },
       // display data
       datatype_onChange(val) {
-          alert(val);
+        alert("Display:" + Object.keys(this.reader_location_dict));
+        //this.clear_map();
         },
       // display type
       displaytype_onChange(val) {
         alert(val);
+      },
+      // clear map 
+      clear_map() {
+        var mymap = this.map;
+        var osmlayer = this.osm;
+        alert(osm.layer);
+        mymap.eachLayer(function (layer) {
+            //keep the basemap layer
+            alert(layer.constructor.name);
+            if (layer != osmlayer) {mymap.removeLayer(layer);};
+            });
       },
     },
     
