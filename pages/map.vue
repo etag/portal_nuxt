@@ -3,7 +3,7 @@
   <div>
     <div id="map-wrap" style="height: 90vh; width: 100%;">
         <l-map ref="map" :zoom="15" :center="center" >
-          <l-tile-layer ref="osm" :layerType="base"  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
+          <l-tile-layer ref="osm" name=osm layerType="base"  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
           <l-marker :lat-lng="center"></l-marker>
         </l-map>
         <div id="sidebar" class="leaflet-sidebar collapsed">
@@ -148,8 +148,8 @@ import reader_location_json from '../data/reader_location.json';
       }
     },
     computed: {
-      map: function() {return this.$refs.map.mapObject;},
-      osm: function() {return this.$refs.osm;},
+      map: function () {return this.$refs.map.mapObject},
+      osm: function () {return this.$refs.osm.mapObject},
       reader_location_dict: function() {
           var new_dict = {};
           var reader_id,location_id,r_lat,r_lon;
@@ -184,7 +184,7 @@ import reader_location_json from '../data/reader_location.json';
       // display data
       datatype_onChange(val) {
         alert("Display:" + Object.keys(this.reader_location_dict));
-        //this.clear_map();
+        this.clear_map();
         },
       // display type
       displaytype_onChange(val) {
@@ -194,10 +194,8 @@ import reader_location_json from '../data/reader_location.json';
       clear_map() {
         var mymap = this.map;
         var osmlayer = this.osm;
-        alert(osm.layer);
         mymap.eachLayer(function (layer) {
             //keep the basemap layer
-            alert(layer.constructor.name);
             if (layer != osmlayer) {mymap.removeLayer(layer);};
             });
       },
