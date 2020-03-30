@@ -21,5 +21,7 @@
     "nuxt-leaflet": "0.0.19",
     "vue2-leaflet": "^2.5.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@nuxtjs/google-analytics": "^2.2.3"
+  }
 }
