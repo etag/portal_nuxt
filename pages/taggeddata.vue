@@ -18,6 +18,7 @@
     <b-button type="button" @click="downloadData()"><font-awesome-icon icon="cloud-download-alt" /><span>Download Data</span></b-button>
 
   </div>
+
   <!--<div>
     <dropzone
       id="el"
@@ -32,6 +33,22 @@
 <script>
 import Dropzone from 'nuxt-dropzone'
 import 'nuxt-dropzone/dropzone.css'
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
 
 export default {
   async fetch ({ store, params, app: {$axios}}) {
@@ -54,10 +71,8 @@ export default {
       options: {
         dictDefaultMessage: 'Drop file here or click to upload.',
         acceptedFiles: '.csv',
-        // withCredentials: true,
-        // headers: {'X-CSRFToken': this.getCookie('csrftoken')},
         headers: {
-          'X-CSRFToken': this.$auth.$storage.getCookie('csrftoken'),
+          'X-CSRFToken': getCookie('csrftoken'),
           'Authorization': this.$auth.$storage._state['_token.local']
         },
         url: "/api/etag/file-upload/"
@@ -86,9 +101,6 @@ export default {
     nextUrl () {
       return this.$store.state.tags.next
     },
-  },
-  mounted () {
-    console.log(this.$auth.$storage.getCookie('csrftoken'))
   },
   methods: {
     downloadFile(url,filename) {
