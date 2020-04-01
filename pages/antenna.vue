@@ -65,7 +65,21 @@
           await this.$axios({
             url: '/api/queue/run/etagq.tasks.antenna.process_to_file/?format=json',
             method: 'POST',
-            headers: {Authorization: this.$auth.$storage._state['_token.local']}
+            headers: {Authorization: this.$auth.$storage._state['_token.local']},
+            data: {
+              function: "etagq.tasks.antenna.process_to_file",
+              queue: "celery",
+              kwargs: {
+                ra:  this.ra,
+                ri:  this.ri,
+                phi: this.phi,
+                n:   this.n,
+                o:   this.o,
+                wt:  this.wt,
+                h:   this.h,
+                nxy: this.nxy,
+              }
+            }
           })
         } catch (err) {
           console.log(err)
