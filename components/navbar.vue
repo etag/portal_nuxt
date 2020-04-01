@@ -11,6 +11,7 @@
         <b-nav-item title="About" class="mh-100" to="/about" exact exact-active-class="active" no-prefetch>About</b-nav-item>
         <b-nav-item title="Map" to="/map" exact exact-active-class="active" no-prefetch>Map</b-nav-item>
         <template v-if="$store.state.auth.loggedIn">
+          <b-nav-item title="Antenna Design" to="/antenna" exact exact-active-class="active" no-prefetch>Antenna Design</b-nav-item>
           <b-nav-item title="Reader Data" to="/readerdata" exact exact-active-class="active" no-prefetch>Reader Data</b-nav-item>
           <b-nav-item title="RFID Reads" to="/rfidreads" exact exact-active-class="active" no-prefetch>RFID Reads</b-nav-item>
           <b-nav-item title="Tagged Data" to="/taggeddata" exact exact-active-class="active" no-prefetch>Tagged Data</b-nav-item>
