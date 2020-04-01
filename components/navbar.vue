@@ -14,7 +14,7 @@
           <b-nav-item title="Reader Data" to="/readerdata" exact exact-active-class="active" no-prefetch>Reader Data</b-nav-item>
           <b-nav-item title="RFID Reads" to="/rfidreads" exact exact-active-class="active" no-prefetch>RFID Reads</b-nav-item>
           <b-nav-item title="Tagged Data" to="/taggeddata" exact exact-active-class="active" no-prefetch>Tagged Data</b-nav-item>
-          <b-nav-dropdown :text="$store.state.auth.user.username">
+          <b-nav-dropdown right :text="$store.state.auth.user.username">
             <b-dropdown-item title="Profile" to="/profile" exact exact-active-class="active" no-prefetch>Profile</b-dropdown-item>
             <b-dropdown-item title="Logout" v-on:click="logout" exact exact-active-class="active" no-prefetch>Logout</b-dropdown-item>
           </b-nav-dropdown>
