@@ -82,7 +82,7 @@
 
           <div class="leaflet-sidebar-pane" id="help">
             <h1 class="leaflet-sidebar-header">Help<div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div></h1>
-            <iframe src="/User_Guide_for_ETAG.html" style="border:none;height:700px;width:400px;"> </iframe>
+            <div><iframe src="/User_Guide_for_ETAG.html" style="border:0;height:700px;width:400px;"> </iframe></div>
           </div>
     
     </div>
