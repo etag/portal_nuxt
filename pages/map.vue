@@ -146,6 +146,7 @@ import reader_location_json from '../data/reader_location.json';
         readers: readers_json.results,
         locations: locations_json.results,
         reader_location: reader_location_json.results,
+        readers_marker: L.featureGroup(),
       }
     },
     computed: {
@@ -154,15 +155,18 @@ import reader_location_json from '../data/reader_location.json';
       reader_location_dict: function() {
           var new_dict = {};
           var reader_id,location_id,r_lat,r_lon;
+          var starttime, endtime;
           for (var i=0; i<this.reader_location.length; i++) {
               reader_id = this.reader_location[i]['reader_id'];
               location_id = this.reader_location[i]['location_id'];
+              starttime = this.reader_location[i]['start_timestamp'];
+              endtime = this.reader_location[i]['end_timestamp'];
               //find lat,lon by location id
               for (var j=0;j< this.locations.length;j++) {
                   if (location_id == this.locations[j]['location_id']){
                         r_lat = this.locations[j]['latitude'];
                         r_lon = this.locations[j]['longitude'];
-                        new_dict[reader_id] = [r_lat,r_lon];
+                        new_dict[reader_id] = [r_lat,r_lon,starttime,endtime];
                         break;
                   };
               }
@@ -184,9 +188,30 @@ import reader_location_json from '../data/reader_location.json';
       },
       // display data
       datatype_onChange(val) {
-        alert("Display:" + Object.keys(this.reader_location_dict));
-        this.clear_map();
-        },
+      this.clear_map();
+      this.readers_marker.clearLayers();
+      if (val == "readers") {
+            var reader_id, reader_desc, reader_lat,reader_lon,reader_s_time,reader_e_time;
+            var popinfo;
+            for (var i=0; i<this.readers.length; i++) {
+                  reader_id = this.readers[i]['reader_id'];
+                  reader_desc = this.readers[i]['description'];
+                  //[reader_lat, reader_lon,reader_s_time,reader_e_time]= extract_reader_location(reader_id);
+                  if (reader_id in this.reader_location_dict) {
+                    [reader_lat, reader_lon,reader_s_time,reader_e_time]= this.reader_location_dict[reader_id];
+                    popinfo = '<p style="font-size:16px"><strong>Reader ID: </strong>' + reader_id + "<br>";
+                    popinfo += "<strong>Description: </strong>" + reader_desc + "<br>";
+                    popinfo += "<strong>Start Timestamp: </strong>" + reader_s_time + "<br>";
+                    popinfo += "<strong>End Timestamp: </strong>" + reader_e_time + "<br>";
+                    popinfo +="</p>";
+                    reader_id = '';
+                    L.marker([reader_lat,reader_lon]).bindPopup(popinfo).addTo(this.readers_marker);
+                  }
+            }
+      this.map.addLayer(this.readers_marker);
+      this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
+      }        
+      },
       // display type
       displaytype_onChange(val) {
         alert(val);
