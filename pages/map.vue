@@ -136,14 +136,14 @@ import tag_animal_json from '../data/tag_animal.json';
         opt_displaytype: '',
         date_value: [0, 30],
         allspecies:[
-              {text:'Cardinal', value: 'Cardinal' },
-              {text:'Blue Jay', value: 'Blue Jay' },
-              {text:'Chickadee', value: 'Chickadee' },
-              {text:'Titmouse', value: 'Titmouse' },
-              {text:'Sparrow', value: 'Sparrow' },
-              {text:'Finch', value: 'Finch' },
-              {text:'Others', value: 'Others' }
-        ],
+          {text:'Carolina Chickadee',vaule:'0416F1BAA0,0416F20F1F,0416F1CADD,0416F1EF53,0416F20B45'},
+          {text:'Dark-eyed Junco',vaule:'TU0005CD'},
+          {text:'Downey Woodpecker',vaule:'0416F20590'},
+          {text:'Northern Cardinal',vaule:'TU200005BB'},
+          {text:'Purple Martin',vaule:'TU0000720,BFBFBFBFBF,0416F1D055'},
+          {text:'Tufted titmouse',vaule:'0416F1E5F8,0416F204E3,0416F208FC'},
+          {text:'Window Dove',vaule:'0416F1DB87'},
+          ],
         alltagid:[
             {text:'0416F1DB87',value:'0416F1DB87'}, 
             {text:'0416F1E5F8',value:'0416F1E5F8'}, 
@@ -161,7 +161,7 @@ import tag_animal_json from '../data/tag_animal.json';
             {text:'TU0000720', value:'TU0000720'}, 
             {text:'TU0005CD', value:'TUvalue:0005CD'},
             ],
-        readers_summary: {
+        tag_reads_summary: {
           "T1B": {"0416F1E5F8": 60, "0416F20B45": 15, "0416F208FC": 8},
           "T2A": {"BFBFBFBFBF": 1, "0416F1DB87": 1, "0416F1D055": 5}, 
           "T2B": {"0416F204E3": 61, "0416F20B45": 22, "0416F1E5F8": 48, "0416F1BAA0": 13, "0416F1CADD": 2, "BFBFBFBFBF": 1, "0416F1DB87": 1}, 
