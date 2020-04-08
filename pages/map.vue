@@ -38,8 +38,8 @@
                 <!-- display type -->
                 <b-form-group label="Display Type" label-size="lg" class="font-weight-bold">
                 <b-form-radio-group v-model='opt_displaytype' size="lg" id="opt_displaytype"  @change="displaytype_onChange"  name="opt_displaytype" stacked>
-                <b-form-radio  value="tag_summaries">Summaries</b-form-radio>
-                <b-form-radio value="raw_tag_reads">Raw tag reads</b-form-radio>
+                <b-form-radio  ref="tag_summaries "value="tag_summaries">Summaries</b-form-radio>
+                <b-form-radio ref="raw_tag_reads" value="raw_tag_reads">Raw tag reads</b-form-radio>
                 </b-form-radio-group>
                 </b-form-group>
                 <!-- display options -->
@@ -112,6 +112,7 @@ import 'vue-slider-component/theme/default.css';
 import readers_json from "../data/readers.json";
 import locations_json from '../data/locations.json';
 import reader_location_json from '../data/reader_location.json';
+import tag_reads_json from '../data/tag_reads_1000.json';
 
   export default {
     auth: false, // do not require to be logged in to view this page
@@ -130,7 +131,7 @@ import reader_location_json from '../data/reader_location.json';
         center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
         selected: [],
         datatype_sel: '',
-        opt_displaytype: 'tag_summaries',
+        opt_displaytype: '',
         date_value: [0, 30],
         allspecies:[
               {text:'Cardinal', value: 'Cardinal' },
@@ -150,6 +151,7 @@ import reader_location_json from '../data/reader_location.json';
         readers: readers_json.results,
         locations: locations_json.results,
         reader_location: reader_location_json.results,
+        tag_reads: tag_reads_json.results,
         //readers_marker: L.featureGroup(),
         readers_marker: L.markerClusterGroup(),
       }
@@ -215,11 +217,52 @@ import reader_location_json from '../data/reader_location.json';
             }
       this.map.addLayer(this.readers_marker);
       this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
-      }        
+      }
+      //display tags
+      if (val == "tags") {
+        //set the as summaries if is not selected
+        if (this.opt_displaytype == "") {this.opt_displaytype ="tag_summaries";}
+        var optionValue = this.opt_displaytype;
+          if (optionValue == "raw_tag_reads") {
+              var tag_id, reader_id,reader_lat,reader_lon,pop_info;
+              var reader_s_time,reader_e_time; //not used
+              var accessory_data;
+              for (var i=0; i<this.tag_reads.length; i++) {
+                    reader_id = this.tag_reads[i]['reader_id'];
+                    tag_id = this.tag_reads[i]['tag_id'];
+                    //[reader_lat, reader_lon,reader_s_time,reader_e_time]= extract_reader_location(reader_id);
+                    [reader_lat, reader_lon,reader_s_time,reader_e_time]= this.reader_location_dict[reader_id];
+                    popinfo = '<p style="font-size:16px"><strong>Tag ID: </strong>' + tag_id + "</p>";
+                    popinfo += "<strong>Reader ID</strong>: " + this.tag_reads[i]['reader_id']+ "<br>";
+                    popinfo += "<strong>Read Time</strong>: " + this.tag_reads[i]['tag_read_time']+ "<br>";
+                    popinfo += "<strong>Public</strong>: " + this.tag_reads[i]['public'] + "<br>";
+                    popinfo += "<strong>Accessory Data</strong>:"+ "<br>";
+                    popinfo += "<ul>";
+                    // switch to a loop
+                    accessory_data = this.tag_reads[i]['accessory_data'];
+                     for (var p in accessory_data) {
+                        if( accessory_data.hasOwnProperty(p) ) {
+                          popinfo += "<li>" + p + ": "+accessory_data[p]+"</li>";
+                            //result += p + " , " + obj[p] + "\n";
+                          } 
+                      }              
+                    //popinfo += "<li>HUMIDITY: "+this.tag_reads[i]['accessory_data']['HUMIDITY']+"</li>";
+                    //popinfo += "<li>SOLAR_RADIATION: "+this.tag_reads[i]['accessory_data']['SOLAR_RADIATION']+"</li>";
+                    //popinfo += "<li>TEMPERATURE: "+this.tag_reads[i]['accessory_data']['TEMPERATURE']+"</li>";
+                    popinfo += "</ul>";
+                    reader_id = '';
+                    tag_id = '';
+                    L.marker([reader_lat,reader_lon]).bindPopup(popinfo).addTo(this.readers_marker);
+              }
+              this.map.addLayer(this.readers_marker);
+              this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
+          }
+      } 
+      
       },
       // display type
       displaytype_onChange(val) {
-        alert(val);
+        //alert(this.opt_displaytype);
       },
       // clear map 
       clear_map() {
