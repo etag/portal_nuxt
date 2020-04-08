@@ -30,7 +30,7 @@
                 <br>
                 <!-- data type -->
                 <b-form-group label="Data Type" label-size="lg" class="font-weight-bold">
-                <b-form-radio-group size="lg" id="radio-group-2"  @change="datatype_onChange"  name="radio-sub-component" stacked>
+                <b-form-radio-group size="lg" v-model='datatype_sel' id="radio-group-2"  @change="datatype_onChange"  name="radio-sub-component" stacked>
                 <b-form-radio  value="readers" >Readers</b-form-radio>
                 <b-form-radio value="tags">Tag Reads</b-form-radio>
                 </b-form-radio-group>
@@ -150,6 +150,14 @@ import tag_animal_json from '../data/tag_animal.json';
               {text:'06200005BA', value: '06200005BA'},
               {text:'TDP000064D', value: 'TDP000064D'}
         ],
+        readers_summary: {
+          "T1B": {"0416F1E5F8": 60, "0416F20B45": 15, "0416F208FC": 8},
+          "T2A": {"BFBFBFBFBF": 1, "0416F1DB87": 1, "0416F1D055": 5}, 
+          "T2B": {"0416F204E3": 61, "0416F20B45": 22, "0416F1E5F8": 48, "0416F1BAA0": 13, "0416F1CADD": 2, "BFBFBFBFBF": 1, "0416F1DB87": 1}, 
+          "T2C": {"0416F204E3": 556, "0416F208FC": 120, "0416F1EF53": 1, "0416F20B45": 12, "0416F20590": 1, "BFBFBFBFBF": 2, "0416F1DB87": 1},
+          "T1A": {"0416F20F1F": 16, "0416F1E5F8": 3, "0416F208FC": 7, "0416F1D055": 9, "BFBFBFBFBF": 5, "0416F1DB87": 1},
+          "TU109876": {"TU0000720": 16, "TU200005BB": 4, "TU0005CD": 8}
+        },
         readers: readers_json.results,
         locations: locations_json.results,
         reader_location: reader_location_json.results,
@@ -242,7 +250,8 @@ import tag_animal_json from '../data/tag_animal.json';
         //set the as summaries if is not selected
       //alert(this.tag_animal_dict['0416F20F1F']);
         if (this.opt_displaytype == "") {this.opt_displaytype ="tag_summaries";}
-        var optionValue = this.opt_displaytype;
+        //var optionValue = this.opt_displaytype;
+        var optionValue = $("input[name='opt_displaytype']:checked").val();
           if (optionValue == "raw_tag_reads") {
               var tag_id, reader_id,reader_lat,reader_lon,pop_info;
               var animal_id, animal_species;
@@ -289,7 +298,8 @@ import tag_animal_json from '../data/tag_animal.json';
       },
       // display type
       displaytype_onChange(val) {
-        this.datatype_onChange(val);
+        if (this.datatype_sel !== "tags") {this.datatype_sel ="tags";}
+        this.datatype_onChange("tags");
       },
       // clear map 
       clear_map() {
