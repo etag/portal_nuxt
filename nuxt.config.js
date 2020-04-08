@@ -1,8 +1,10 @@
 
 export default {
-  mode: 'spa',
+  mode: 'spa',  // single page application
   env: {
-    baseUrl: 'http://localhost'
+    // baseUrl: 'https://ec2-54-186-103-38.us-west-2.compute.amazonaws.com',
+    baseUrl: 'https://head.ouetag.org'
+    // baseUrl: 'http://localhost'
   },
   /*
   ** Headers of the page
@@ -110,14 +112,17 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    proxy: true,
-    //baseURL: 'http://localhost'
+    // proxy: true,
+    baseURL: process.env.baseurl,
+    // rejectUnauthorized: false,
   },
   /*
   ** Proxy configuration
   */
   proxy: {
-    '/api': 'http://localhost'
+    // '/api': 'https://ec2-54-186-103-38.us-west-2.compute.amazonaws.com'
+    '/api': 'https://head.ouetag.org'
+    //'/api': 'http://localhost'
   },
   /*
   ** Router configuration
