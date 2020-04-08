@@ -113,6 +113,8 @@ import readers_json from "../data/readers.json";
 import locations_json from '../data/locations.json';
 import reader_location_json from '../data/reader_location.json';
 import tag_reads_json from '../data/tag_reads_1000.json';
+import animals_json from '../data/animals.json';
+import tag_animal_json from '../data/tag_animal.json';
 
   export default {
     auth: false, // do not require to be logged in to view this page
@@ -152,6 +154,8 @@ import tag_reads_json from '../data/tag_reads_1000.json';
         locations: locations_json.results,
         reader_location: reader_location_json.results,
         tag_reads: tag_reads_json.results,
+        animals:animals_json.results,
+        tag_animal: tag_animal_json.results,
         //readers_marker: L.featureGroup(),
         readers_marker: L.markerClusterGroup(),
       }
@@ -180,6 +184,21 @@ import tag_reads_json from '../data/tag_reads_1000.json';
             }
           return new_dict;
         },
+      tag_animal_dict: function() {
+        var new_dict = {}
+        var tag_id,animal_id,animal_name;
+        for (var i=0; i<this.tag_animal.length;i++) {
+          tag_id = this.tag_animal[i]['tag_id'];
+          animal_id = this.tag_animal[i]['animal_id'];
+          for (var j=0;j< this.animals.length;j++) { 
+            if (animal_id == this.animals[j]['animal_id']) {
+              new_dict[tag_id] = [animal_id, this.animals[j]['species']];
+              break;
+            }
+          }
+        }
+        return new_dict;
+      },
     },
     methods: {
       initMap: function() {
@@ -221,18 +240,26 @@ import tag_reads_json from '../data/tag_reads_1000.json';
       //display tags
       if (val == "tags") {
         //set the as summaries if is not selected
+      //alert(this.tag_animal_dict['0416F20F1F']);
         if (this.opt_displaytype == "") {this.opt_displaytype ="tag_summaries";}
         var optionValue = this.opt_displaytype;
           if (optionValue == "raw_tag_reads") {
               var tag_id, reader_id,reader_lat,reader_lon,pop_info;
+              var animal_id, animal_species;
               var reader_s_time,reader_e_time; //not used
               var accessory_data;
               for (var i=0; i<this.tag_reads.length; i++) {
                     reader_id = this.tag_reads[i]['reader_id'];
                     tag_id = this.tag_reads[i]['tag_id'];
+                    popinfo = '<p style="font-size:18px"><strong>Tag ID: </strong>' + tag_id + "</p>";
+                    popinfo += '<span style="font-size:16px">';
+                    if (this.tag_animal_dict.hasOwnProperty(tag_id)) {
+                      [animal_id,animal_species] = this.tag_animal_dict[tag_id]; 
+                      popinfo += '<strong>Animal ID: </strong>' + animal_id.toString() + "<br>";
+                      popinfo += '<strong>Animal Species: </strong>' + animal_species + "<br>";
+                    } 
                     //[reader_lat, reader_lon,reader_s_time,reader_e_time]= extract_reader_location(reader_id);
-                    [reader_lat, reader_lon,reader_s_time,reader_e_time]= this.reader_location_dict[reader_id];
-                    popinfo = '<p style="font-size:16px"><strong>Tag ID: </strong>' + tag_id + "</p>";
+                    [reader_lat, reader_lon,reader_s_time,reader_e_time]= this.reader_location_dict[reader_id]; 
                     popinfo += "<strong>Reader ID</strong>: " + this.tag_reads[i]['reader_id']+ "<br>";
                     popinfo += "<strong>Read Time</strong>: " + this.tag_reads[i]['tag_read_time']+ "<br>";
                     popinfo += "<strong>Public</strong>: " + this.tag_reads[i]['public'] + "<br>";
@@ -245,11 +272,11 @@ import tag_reads_json from '../data/tag_reads_1000.json';
                           popinfo += "<li>" + p + ": "+accessory_data[p]+"</li>";
                             //result += p + " , " + obj[p] + "\n";
                           } 
-                      }              
+                    }              
                     //popinfo += "<li>HUMIDITY: "+this.tag_reads[i]['accessory_data']['HUMIDITY']+"</li>";
                     //popinfo += "<li>SOLAR_RADIATION: "+this.tag_reads[i]['accessory_data']['SOLAR_RADIATION']+"</li>";
                     //popinfo += "<li>TEMPERATURE: "+this.tag_reads[i]['accessory_data']['TEMPERATURE']+"</li>";
-                    popinfo += "</ul>";
+                    popinfo += "</ul></span>";
                     reader_id = '';
                     tag_id = '';
                     L.marker([reader_lat,reader_lon]).bindPopup(popinfo).addTo(this.readers_marker);
@@ -262,7 +289,7 @@ import tag_reads_json from '../data/tag_reads_1000.json';
       },
       // display type
       displaytype_onChange(val) {
-        //alert(this.opt_displaytype);
+        this.datatype_onChange(val);
       },
       // clear map 
       clear_map() {
