@@ -96,6 +96,9 @@
 <script>
 import 'leaflet-sidebar-v2';
 import 'leaflet-sidebar-v2/css/leaflet-sidebar.css';
+import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import "@fortawesome/fontawesome-free";
 import '@fortawesome/fontawesome-free/css/all.css';
 import $ from 'jquery';
@@ -146,7 +149,8 @@ import reader_location_json from '../data/reader_location.json';
         readers: readers_json.results,
         locations: locations_json.results,
         reader_location: reader_location_json.results,
-        readers_marker: L.featureGroup(),
+        //readers_marker: L.featureGroup(),
+        readers_marker: L.markerClusterGroup(),
       }
     },
     computed: {

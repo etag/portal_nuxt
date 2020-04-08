@@ -22,6 +22,7 @@
     "jquery-ui-themes": "^1.12.0",
     "leaflet": "^1.6.0",
     "leaflet-sidebar-v2": "^3.2.2",
+    "leaflet.markercluster": "^1.4.1",
     "nuxt": "^2.12.0",
     "nuxt-dropzone": "^1.0.4",
     "nuxt-leaflet": "0.0.19",
