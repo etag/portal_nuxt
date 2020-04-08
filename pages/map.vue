@@ -36,8 +36,8 @@
                 </b-form-radio-group>
                 </b-form-group>
                 <!-- display type -->
-                <b-form-group label="Display Type" label-size="lg" class="font-weight-bold">
-                <b-form-radio-group v-model='opt_displaytype' size="lg" id="opt_displaytype"  @change="displaytype_onChange"  name="opt_displaytype" stacked>
+                <b-form-group label="Tag Reads Display Options" label-size="lg" class="font-weight-bold">
+                <b-form-radio-group v-model='opt_displaytype' size='lg' id="opt_displaytype"  @change="displaytype_onChange"  name="opt_displaytype" stacked>
                 <b-form-radio  ref="tag_summaries "value="tag_summaries">Summaries</b-form-radio>
                 <b-form-radio ref="raw_tag_reads" value="raw_tag_reads">Raw tag reads</b-form-radio>
                 </b-form-radio-group>
@@ -145,11 +145,22 @@ import tag_animal_json from '../data/tag_animal.json';
               {text:'Others', value: 'Others' }
         ],
         alltagid:[
-              {text:'620000620', value: '620000620'},
-              {text:'620000731', value: '620000731'},
-              {text:'06200005BA', value: '06200005BA'},
-              {text:'TDP000064D', value: 'TDP000064D'}
-        ],
+            {text:'0416F1DB87',value:'0416F1DB87'}, 
+            {text:'0416F1E5F8',value:'0416F1E5F8'}, 
+            {text:'0416F1BAA0',value:'0416F1BAA0'}, 
+            {text:'0416F208FC',value:'0416F208FC'}, 
+            {text:'0416F1D055',value:'0416F1D055'}, 
+            {text:'BFBFBFBFBF',value:'BFBFBFBFBF'}, 
+            {text:'0416F20590',value:'0416F20590'}, 
+            {text:'0416F204E3',value:'0416F204E3'}, 
+            {text:'0416F20F1F',value:'0416F20F1F'}, 
+            {text:'TU200005BB',value:'TU200005BB'}, 
+            {text:'0416F1CADD',value:'0416F1CADD'}, 
+            {text:'0416F1EF53',value:'0416F1EF53'}, 
+            {text:'0416F20B45',value:'0416F20B45'}, 
+            {text:'TU0000720', value:'TU0000720'}, 
+            {text:'TU0005CD', value:'TUvalue:0005CD'},
+            ],
         readers_summary: {
           "T1B": {"0416F1E5F8": 60, "0416F20B45": 15, "0416F208FC": 8},
           "T2A": {"BFBFBFBFBF": 1, "0416F1DB87": 1, "0416F1D055": 5}, 
