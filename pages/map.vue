@@ -260,9 +260,9 @@ import tag_animal_json from '../data/tag_animal.json';
       if (val == "tags") {
         //set the as summaries if is not selected
       //alert(this.tag_animal_dict['0416F20F1F']);
-        if (this.opt_displaytype == "") {this.opt_displaytype ="tag_summaries";}
-        //var optionValue = this.opt_displaytype;
         var optionValue = $("input[name='opt_displaytype']:checked").val();
+        if (this.opt_displaytype == "") {this.opt_displaytype ="tag_summaries";optionValue="tag_summaries";}
+        //var optionValue = this.opt_displaytype;
           if (optionValue == "raw_tag_reads") {
               var tag_id, reader_id,reader_lat,reader_lon,pop_info;
               var animal_id, animal_species;
@@ -304,6 +304,36 @@ import tag_animal_json from '../data/tag_animal.json';
               this.map.addLayer(this.readers_marker);
               this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
           }
+          if (optionValue == "tag_summaries") { 
+            var reader_id, reader_desc, reader_lat,reader_lon,reader_s_time,reader_e_time;
+            var popinfo;
+            var tag_summary;
+            for (var i=0; i<this.readers.length; i++) {
+                  reader_id = this.readers[i]['reader_id'];
+                  reader_desc = this.readers[i]['description'];
+                  //[reader_lat, reader_lon,reader_s_time,reader_e_time]= extract_reader_location(reader_id);
+                  if (reader_id in this.reader_location_dict) {
+                    [reader_lat, reader_lon,reader_s_time,reader_e_time]= this.reader_location_dict[reader_id];
+                    popinfo = '<p style="font-size:16px"><strong>Reader ID: </strong>' + reader_id + "<br>";
+                    //tag_reads_summary
+                    if (this.tag_reads_summary.hasOwnProperty(reader_id)) {
+                        popinfo += "<br/>No. of tag readings:";
+                        tag_summary = this.tag_reads_summary[reader_id];
+                        for (var p in tag_summary) {
+                            popinfo += "<li>" + p + ": "+tag_summary[p]+"</li>";}
+                      } else {
+                        popinfo += "Zero tag readings ..<br/>";
+                      }
+                    popinfo +="</p>";
+                    reader_id = '';
+                    L.marker([reader_lat,reader_lon]).bindPopup(popinfo).addTo(this.readers_marker);
+                  }
+            }
+          this.map.addLayer(this.readers_marker);
+          this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
+
+          }
+
       } 
       
       },
