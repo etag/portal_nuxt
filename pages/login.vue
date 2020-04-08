@@ -53,11 +53,12 @@ export default {
   },
   methods: {
     async userLogin() {
-      try {
-        await this.$auth.loginWith('local', { data: this.login })
-      } catch (err) {
-        console.log(err)
-      }
+      await this.$auth.loginWith('local', { data: this.login })
+        .catch (this.unauthorized)
+
+    },
+    unauthorized() {
+      this.$notify({group: 'alerts', text: 'Unable to login with the email and password provided.'})
     }
     //login () {
     //  let axios = this.$axios

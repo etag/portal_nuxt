@@ -82,7 +82,9 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/axios'
+    '~/plugins/axios',
+    { src: '~/plugins/notifications', ssr: false }
+
   ],
   /*
   ** Nuxt.js dev-modules
