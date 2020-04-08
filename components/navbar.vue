@@ -10,12 +10,12 @@
       <b-navbar-nav class="ml-auto">
         <b-nav-item title="About" class="mh-100" to="/about" exact exact-active-class="active" no-prefetch>About</b-nav-item>
         <b-nav-item title="Map" to="/map" exact exact-active-class="active" no-prefetch>Map</b-nav-item>
-        <template v-if="$store.state.auth.loggedIn">
+        <template v-if="$auth.loggedIn">
           <b-nav-item title="Antenna Design" to="/antenna" exact exact-active-class="active" no-prefetch>Antenna Design</b-nav-item>
           <b-nav-item title="Reader Data" to="/readerdata" exact exact-active-class="active" no-prefetch>Reader Data</b-nav-item>
           <b-nav-item title="RFID Reads" to="/rfidreads" exact exact-active-class="active" no-prefetch>RFID Reads</b-nav-item>
           <b-nav-item title="Tagged Data" to="/taggeddata" exact exact-active-class="active" no-prefetch>Tagged Data</b-nav-item>
-          <b-nav-dropdown right :text="$store.state.auth.user.username">
+          <b-nav-dropdown right :text="$auth.user.username">
             <b-dropdown-item title="Profile" to="/profile" exact exact-active-class="active" no-prefetch>Profile</b-dropdown-item>
             <b-dropdown-item title="Logout" v-on:click="logout" exact exact-active-class="active" no-prefetch>Logout</b-dropdown-item>
           </b-nav-dropdown>
