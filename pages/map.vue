@@ -37,8 +37,8 @@
                 </b-form-group>
                 <!-- display type -->
                 <b-form-group label="Display Type" label-size="lg" class="font-weight-bold">
-                <b-form-radio-group size="lg" id="opt_displaytype"  @change="displaytype_onChange"  name="opt_displaytype" stacked>
-                <b-form-radio  value="tag_summaries" checked="checked">Summaries</b-form-radio>
+                <b-form-radio-group v-model='opt_displaytype' size="lg" id="opt_displaytype"  @change="displaytype_onChange"  name="opt_displaytype" stacked>
+                <b-form-radio  value="tag_summaries">Summaries</b-form-radio>
                 <b-form-radio value="raw_tag_reads">Raw tag reads</b-form-radio>
                 </b-form-radio-group>
                 </b-form-group>
@@ -130,6 +130,7 @@ import reader_location_json from '../data/reader_location.json';
         center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
         selected: [],
         datatype_sel: '',
+        opt_displaytype: 'tag_summaries',
         date_value: [0, 30],
         allspecies:[
               {text:'Cardinal', value: 'Cardinal' },
