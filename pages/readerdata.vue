@@ -20,9 +20,13 @@
         </b-button>
       </template>
     </b-table>
+
+    <b-button @click="fetchFirst"><font-awesome-icon icon="backward" /></b-button>
     <b-button @click="fetchPrev" :disabled="!prevUrl"><font-awesome-icon icon="angle-left" /></b-button>
     page {{ page }} of {{ totalPages }}
     <b-button @click="fetchNext" :disabled="!nextUrl"><font-awesome-icon icon="angle-right" /></b-button>
+    <b-button @click="fetchLast"><font-awesome-icon icon="forward" /></b-button>
+    <input v-model="gotoPage" placeholder="page #" style="max-width: 70px"><b-button @click="fetchPageByNumber">Go</b-button>
 
     <dropzone id="dzfile" ref="el"
               :options="options"
@@ -60,7 +64,11 @@
 
   export default {
     async fetch ({ store, params, app: {$axios}}) {
-      let { data } = await $axios.get('/api/etag/readers/?page_size=10&format=json')
+      let { data } = await $axios.get('/api/etag/readers/' +
+      '?page=' + store.state.readers.page +
+      '&page_size=' + store.state.readers.pageSize +
+      '&format=json'
+      )
       store.commit('readers/setList', data.results)
       store.commit('readers/setCount', data.count)
       store.commit('readers/setPrev', data.prev)
@@ -74,6 +82,7 @@
         filetype: 'locations',  // This is used by the backend for processing file upload
         api_callback: 'etagq.tasks.tasks.etagDataUpload',  // This is the full name of the upload task in cyberCommons
         baseUrl: process.env.baseUrl,
+        gotoPage: null,  // This holds the user supplied page number to directly goto for pagination
         options: {
           dictDefaultMessage: 'Drop file here or click to upload.',
           acceptedFiles: '.csv',
@@ -123,11 +132,32 @@
         this.$store.commit('readers/setPrev', data.previous)
         this.$store.commit('readers/setNext', data.next)
       },
+      fetchFirst() {
+        this.gotoPage = 1
+        this.fetchPageByNumber()
+      },
+      fetchLast() {
+        this.gotoPage = this.totalPages
+        this.fetchPageByNumber()
+      },
       fetchNext() {
         this.fetchPage(this.nextUrl)
       },
       fetchPrev() {
         this.fetchPage(this.prevUrl)
+      },
+      async fetchPageByNumber() {
+        let { data } = await this.$axios.get('/api/etag/readers/' +
+          '?page=' + this.gotoPage +
+          '&page_size=' + this.$store.state.readers.pageSize +
+          '&format=json'
+        )
+        this.$store.commit('readers/setList', data.results)
+        this.$store.commit('readers/setCount', data.count)
+        this.$store.commit('readers/setPage', this.gotoPage)
+        this.$store.commit('readers/setPrev', data.previous)
+        this.$store.commit('readers/setNext', data.next)
+        this.gotoPage = null  // clear
       },
       editRecord(row) {
         this.$store.commit('readers/setActiveItem', row.item)
