@@ -64,13 +64,14 @@
                               <option>All data</option>
                 </select>
                 <br><h6>Date</h6>
-                <div><h6>Date range: {{ date_value}}</h6></div>
-                <vue-slider v-model="date_value" :enable-cross="false"></vue-slider>
-                
+                <!-- <div><h6>Date range: {{ date_value}}</h6></div> -->
+                <div align="center" display="block" style="width:85%;margin-left: 5%;">
+                <vue-slider v-model="date_value" :min=date0_s :max=date1_s :interval=86400 :enable-cross="false"  :tooltip="'always'" :tooltip-placement="['bottom', 'bottom']" :tooltip-formatter="dateformatter"></vue-slider>
+                </div>
                 <!--
                   <br><div class="mt-3">Selected: <strong>{{ selected }}</strong></div></br>
                 -->
-                <br/>
+                <br/><br/>
                 <button type="button" class="btn btn-primary btn-sm btn-block" @click="apply_filters"><strong>Apply Filters</strong></button>  
 
 
@@ -138,7 +139,10 @@ import tag_animal_json from '../data/tag_animal.json';
         //selected: [],
         datatype_sel: '',
         opt_displaytype: '',
-        date_value: [0, 30],
+        date0_s: new Date('2010-01-01').getTime() / 1000,
+        date1_s: new Date('2014-01-01').getTime() / 1000,
+        date_value:[new Date('2010-01-01').getTime() / 1000,new Date('2014-01-01').getTime() / 1000],
+        dateformatter: v => new Date(v *1000).toISOString().split("T",1),
         allspecies:[
           {text:'Carolina Chickadee',value:'0416F1BAA0,0416F20F1F,0416F1CADD,0416F1EF53,0416F20B45'},
           {text:'Dark-eyed Junco',value:'TU0005CD'},
