@@ -224,6 +224,21 @@ import tag_animal_json from '../data/tag_animal.json';
             }
           }
         }
+        // for demo purpose
+        // TU0000720 16 2 Purple Martin
+        // 0416F1D055 14 7 Purple Martin
+        // BFBFBFBFBF 9 17 Purple Martin
+        new_dict['TU0000720'] =[2,'Purple Martin'];
+        new_dict['0416F1D055'] =[7,'Purple Martin'];
+        new_dict['BFBFBFBFBF'] =[17,'Purple Martin'];
+        // TU0005CD 8 75 "Dark-eyed Junco
+        new_dict['TU0005CD'] =[75,'Dark-eyed Junco'];
+        // 0416F1DB87 4 1 Window Dove
+        new_dict['0416F1DB87'] =[1,'Window Dove'];
+        // TU200005BB 4 71 Northern Cardinal
+        new_dict['TU200005BB'] =[71,'Northern Cardinal'];
+        // 0416F20590 1 67 Downey Woodpecker
+        new_dict['0416F20590'] =[67,'Downey Woodpecker'];
         return new_dict;
       },
     },
