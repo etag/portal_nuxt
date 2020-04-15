@@ -183,12 +183,12 @@
         })
       },
       downloadTemplate() {
-        this.downloadFile('api/etag/file-template/?filetype=tags', 'rfidreads_template.csv')
-        //location.href = 'api/etag/file-template/?filetype=tags'
+        this.downloadFile('api/etag/file-template/?filetype=locations', 'readers_template.csv')
+        //location.href = 'api/etag/file-template/?filetype=locations'
       },
       downloadData() {
-        this.downloadFile('api/etag/file-download/?format=csv&filetype=tags', 'rfidreads.csv')
-        //location.href = 'api/etag/file-download/?format=csv&filetype=tags'
+        this.downloadFile('api/etag/file-download/?format=csv&filetype=locations', 'readers.csv')
+        //location.href = 'api/etag/file-download/?format=csv&filetype=locations'
       },
       failEvent(file, message, xhr) {
         console.log(file)

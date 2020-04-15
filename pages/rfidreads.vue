@@ -185,11 +185,11 @@
         })
       },
       downloadTemplate() {
-        this.downloadFile('api/etag/file-template/?filetype=tags', 'rfidreads_template.csv')
+        this.downloadFile('api/etag/file-template/?filetype=tags', 'rfids_template.csv')
         //location.href = 'api/etag/file-template/?filetype=tags'
       },
       downloadData() {
-        this.downloadFile('api/etag/file-download/?format=csv&filetype=tags', 'rfidreads.csv')
+        this.downloadFile('api/etag/file-download/?format=csv&filetype=tags', 'rfids.csv')
         //location.href = 'api/etag/file-download/?format=csv&filetype=tags'
       },
       failEvent(file, message, xhr) {
