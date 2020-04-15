@@ -46,28 +46,32 @@
                 <h4>Filters</h4>
                 <div class="border-top my-3"></div>
                 <h6>Species</h6>
-                <select v-model="selected" class="selectpicker"  ref='select1'  id="species_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
+                <select  class="selectpicker"  ref='select1'  id="species_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
                     <option v-for="option in allspecies" v-bind:value="option.value">
                         {{ option.text }}
                     </option>
                 </select>
 
                 <h6>Tag ID</h6>
-                          <select v-model="selected" class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
+                          <select  class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
                     <option v-for="option in alltagid" v-bind:value="option.value">
                         {{ option.text }}
                     </option>
                     </select>
                 <h6>Data Privacy</h6>
-                            <select v-model="selected" class="selectpicker" id="data_privacy" title="User only">
+                            <select class="selectpicker" id="data_privacy" title="User only">
                               <option>User only</option>
                               <option>All data</option>
                 </select>
                 <br><h6>Date</h6>
                 <div><h6>Date range: {{ date_value}}</h6></div>
                 <vue-slider v-model="date_value" :enable-cross="false"></vue-slider>
-                <br><div class="mt-3">Selected: <strong>{{ selected }}</strong></div></br>
-                <button type="button" class="btn btn-primary btn-sm btn-block" onclick="apply_filters()"><strong>Apply Filters</strong></button>  
+                
+                <!--
+                  <br><div class="mt-3">Selected: <strong>{{ selected }}</strong></div></br>
+                -->
+                <br/>
+                <button type="button" class="btn btn-primary btn-sm btn-block" @click="apply_filters"><strong>Apply Filters</strong></button>  
 
 
         </div>
@@ -131,18 +135,18 @@ import tag_animal_json from '../data/tag_animal.json';
       return {
         sidebar: '',
         center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
-        selected: [],
+        //selected: [],
         datatype_sel: '',
         opt_displaytype: '',
         date_value: [0, 30],
         allspecies:[
-          {text:'Carolina Chickadee',vaule:'0416F1BAA0,0416F20F1F,0416F1CADD,0416F1EF53,0416F20B45'},
-          {text:'Dark-eyed Junco',vaule:'TU0005CD'},
-          {text:'Downey Woodpecker',vaule:'0416F20590'},
-          {text:'Northern Cardinal',vaule:'TU200005BB'},
-          {text:'Purple Martin',vaule:'TU0000720,BFBFBFBFBF,0416F1D055'},
-          {text:'Tufted titmouse',vaule:'0416F1E5F8,0416F204E3,0416F208FC'},
-          {text:'Window Dove',vaule:'0416F1DB87'},
+          {text:'Carolina Chickadee',value:'0416F1BAA0,0416F20F1F,0416F1CADD,0416F1EF53,0416F20B45'},
+          {text:'Dark-eyed Junco',value:'TU0005CD'},
+          {text:'Downey Woodpecker',value:'0416F20590'},
+          {text:'Northern Cardinal',value:'TU200005BB'},
+          {text:'Purple Martin',value:'TU0000720,BFBFBFBFBF,0416F1D055'},
+          {text:'Tufted titmouse',value:'0416F1E5F8,0416F204E3,0416F208FC'},
+          {text:'Window Dove',value:'0416F1DB87'},
           ],
         alltagid:[
             {text:'0416F1DB87',value:'0416F1DB87'}, 
@@ -159,7 +163,7 @@ import tag_animal_json from '../data/tag_animal.json';
             {text:'0416F1EF53',value:'0416F1EF53'}, 
             {text:'0416F20B45',value:'0416F20B45'}, 
             {text:'TU0000720', value:'TU0000720'}, 
-            {text:'TU0005CD', value:'TUvalue:0005CD'},
+            {text:'TU0005CD', value:'TU0005CD'},
             ],
         tag_reads_summary: {
           "T1B": {"0416F1E5F8": 60, "0416F20B45": 15, "0416F208FC": 8},
@@ -167,7 +171,7 @@ import tag_animal_json from '../data/tag_animal.json';
           "T2B": {"0416F204E3": 61, "0416F20B45": 22, "0416F1E5F8": 48, "0416F1BAA0": 13, "0416F1CADD": 2, "BFBFBFBFBF": 1, "0416F1DB87": 1}, 
           "T2C": {"0416F204E3": 556, "0416F208FC": 120, "0416F1EF53": 1, "0416F20B45": 12, "0416F20590": 1, "BFBFBFBFBF": 2, "0416F1DB87": 1},
           "T1A": {"0416F20F1F": 16, "0416F1E5F8": 3, "0416F208FC": 7, "0416F1D055": 9, "BFBFBFBFBF": 5, "0416F1DB87": 1},
-          "TU109876": {"TU0000720": 16, "TU200005BB": 4, "TU0005CD": 8}
+          "TU109876": {"TU0000720": 16, "TU200005BB": 4, "TU0005CD": 8},
         },
         readers: readers_json.results,
         locations: locations_json.results,
@@ -331,8 +335,7 @@ import tag_animal_json from '../data/tag_animal.json';
             }
           this.map.addLayer(this.readers_marker);
           this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
-
-          }
+        }
 
       } 
       
@@ -342,6 +345,83 @@ import tag_animal_json from '../data/tag_animal.json';
         if (this.datatype_sel !== "tags") {this.datatype_sel ="tags";}
         this.datatype_onChange("tags");
       },
+
+      //display raw tag reads
+      display_raw_tag_with_filter(filter_tag) {
+            var tagfilterflag = (filter_tag.length > 0);
+            //alert(filter_tag.length);
+            //alert(filter_tag.includes('0416F1DB87'));
+            var icount = 0;
+            this.clear_map();
+            this.readers_marker.clearLayers();
+              var tag_id, reader_id,reader_lat,reader_lon,popinfo;
+              var animal_id, animal_species;
+              var reader_s_time,reader_e_time; //not used
+              var accessory_data;
+              for (var i=0; i<this.tag_reads.length; i++) {
+                    reader_id = this.tag_reads[i]['reader_id'];
+                    tag_id = this.tag_reads[i]['tag_id'];
+                    if (tagfilterflag && !filter_tag.includes(tag_id)) {continue;}
+                    popinfo = '<p style="font-size:18px"><strong>Tag ID: </strong>' + tag_id + "</p>";
+                    popinfo += '<span style="font-size:16px">';
+                    if (this.tag_animal_dict.hasOwnProperty(tag_id)) {
+                      [animal_id,animal_species] = this.tag_animal_dict[tag_id]; 
+                      popinfo += '<strong>Animal ID: </strong>' + animal_id.toString() + "<br>";
+                      popinfo += '<strong>Animal Species: </strong>' + animal_species + "<br>";
+                    } 
+                    //[reader_lat, reader_lon,reader_s_time,reader_e_time]= extract_reader_location(reader_id);
+                    [reader_lat, reader_lon,reader_s_time,reader_e_time]= this.reader_location_dict[reader_id]; 
+                    popinfo += "<strong>Reader ID</strong>: " + this.tag_reads[i]['reader_id']+ "<br>";
+                    popinfo += "<strong>Read Time</strong>: " + this.tag_reads[i]['tag_read_time']+ "<br>";
+                    popinfo += "<strong>Public</strong>: " + this.tag_reads[i]['public'] + "<br>";
+                    popinfo += "<strong>Accessory Data</strong>:"+ "<br>";
+                    popinfo += "<ul>";
+                    // switch to a loop
+                    accessory_data = this.tag_reads[i]['accessory_data'];
+                     for (var p in accessory_data) {
+                        if( accessory_data.hasOwnProperty(p) ) {
+                          popinfo += "<li>" + p + ": "+accessory_data[p]+"</li>";
+                            //result += p + " , " + obj[p] + "\n";
+                          } 
+                    }              
+                    //popinfo += "<li>HUMIDITY: "+this.tag_reads[i]['accessory_data']['HUMIDITY']+"</li>";
+                    //popinfo += "<li>SOLAR_RADIATION: "+this.tag_reads[i]['accessory_data']['SOLAR_RADIATION']+"</li>";
+                    //popinfo += "<li>TEMPERATURE: "+this.tag_reads[i]['accessory_data']['TEMPERATURE']+"</li>";
+                    popinfo += "</ul></span>";
+                    reader_id = '';
+                    tag_id = '';
+                    L.marker([reader_lat,reader_lon]).bindPopup(popinfo).addTo(this.readers_marker);
+                    icount += 1;
+            }
+
+            if (icount >= 1) {
+              this.map.addLayer(this.readers_marker);
+              this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});}
+            else {alert("Found zero record!");}
+      },
+      
+      // apply filters 
+      apply_filters() {
+
+        var species_filter = $('#species_selector').val();
+        var tag_filter = $('#tag_selector').val();
+      
+        var tag_filter_list = [];
+        //ignore length = 0 or length = allspecies.length
+        if (species_filter.length > 0 && species_filter.length < this.allspecies.length ) {
+          for (var i = 0; i < species_filter.length; i++) {
+            tag_filter_list.push(species_filter[i].split(","));
+          }
+        }
+
+        //ignore length =0 or length = alltagid.length;
+        if (tag_filter.length > 0 && tag_filter.length < this.alltagid.length ) {
+          tag_filter_list.push(tag_filter);
+        }
+        //alert(tag_filter_list);  
+        this.display_raw_tag_with_filter(tag_filter_list.flat());
+      },
+
       // clear map 
       clear_map() {
         var mymap = this.map;
