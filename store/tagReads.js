@@ -2,7 +2,7 @@ export const state = () => ({
   list: [],     // list of records for current page
   count: 0,     // total number of records
   page: 1,      // track current page
-  pageSize: 10, // number of items to show per page
+  pageSize: 20, // number of items to show per page
   activeItem: null, // object of active item used for editing
   prev: null,   // url to previous page of content
   next: null,   // url to next page of content
