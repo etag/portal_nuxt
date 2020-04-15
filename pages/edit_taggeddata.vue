@@ -12,6 +12,15 @@
     methods: {
       saveChanges() {
         // TODO: add axios patch to submit edits
+        this.$axios({
+          url: this.item.url,
+          method: 'PATCH',
+          data: fields,
+          headers: {Authorization: this.$auth.$storage._state['_token.local']}
+        }).then((response) => {
+          // check if successful and reroute to taggeddata page
+          router.push('taggeddata')
+        })
       }
     }
   }
