@@ -9,7 +9,16 @@
       :items="items"
       :fields="fields"
     >
-
+      <!--<template v-slot="actions" slot-scope="row">-->
+      <template v-slot:cell(animal_id)="row">
+        <!-- We use @click.stop here to prevent a 'row-clicked' event from also happening -->
+        <b-button size="sm" @click.stop="" class="mr-1">
+          Edit
+        </b-button>
+        <b-button size="sm" @click.stop="" class="mr-1">
+          Remove
+        </b-button>
+      </template>
     </b-table>
     <b-button @click="fetchPrev" :disabled="!prevUrl"><font-awesome-icon icon="angle-left" /></b-button>
     page {{ page }} of {{ totalPages }}
@@ -27,16 +36,6 @@
     <b-button type="button" @click="downloadData"><font-awesome-icon icon="cloud-download-alt" /><span> Download Data </span></b-button>
 
   </div>
-
-  <!--<div>
-    <dropzone
-      id="el"
-      :options="dzoptions"
-      v-on:vdropzone-error="failEvent"
-      v-on:vdropzone-sending="sendingEvent"
-      v-on:vdropzone-success="successEvent"
-    />
-  </div>-->
 </template>
 
 <script>
