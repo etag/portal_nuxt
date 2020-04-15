@@ -3,6 +3,7 @@ export const state = () => ({
   count: 0,     // total number of records
   page: 1,      // track current page
   pageSize: 10, // number of items to show per page
+  activeItem: null, // object of active item used for editing
   prev: null,   // url to previous page of content
   next: null,   // url to next page of content
 })
@@ -16,6 +17,9 @@ export const mutations = {
   },
   setList(state, animals) {
     state.list = animals
+  },
+  setActiveItem(state, item) {
+    state.activeItem = item
   },
   setPage(state, page) {
     state.page = page

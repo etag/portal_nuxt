@@ -10,13 +10,13 @@
       :fields="fields"
     >
       <!--<template v-slot="actions" slot-scope="row">-->
-      <template v-slot:cell(animal_id)="row">
+      <template v-slot:cell(actions)="row">
         <!-- We use @click.stop here to prevent a 'row-clicked' event from also happening -->
-        <b-button size="sm" @click.stop="" class="mr-1">
-          Edit
+        <b-button size="sm" @click.stop="editRecord(row)" class="mr-1" variant="primary">
+          <font-awesome-icon icon="edit" />
         </b-button>
-        <b-button size="sm" @click.stop="" class="mr-1">
-          Remove
+        <b-button size="sm" @click.stop="deleteRecord(row)" class="mr-1" variant="danger">
+          <font-awesome-icon icon="trash" />
         </b-button>
       </template>
     </b-table>
@@ -94,7 +94,7 @@ export default {
       return this.$store.state.animals.list
     },
     fields () {
-      return ['animal_id', 'species', 'field_data']
+      return ['actions', 'animal_id', 'species', 'field_data']
     },
     totalCount () {
       return this.$store.state.animals.count
@@ -129,6 +129,14 @@ export default {
     },
     fetchPrev() {
       this.fetchPage(this.prevUrl)
+    },
+    editRecord(row) {
+      this.$store.commit('animals/setActiveItem', row.item)
+      this.$router.push('edit_taggeddata')
+    },
+    deleteRecord(row) {
+      // TODO: confirm removal and remove record
+      console.log(row.item.url)
     },
     downloadFile(url,filename) {
       this.$axios({

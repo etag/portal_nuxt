@@ -2,7 +2,6 @@
 <div>
   <b-form @submit="saveChanges">
     {{ item.url }}
-    {{ item.species }}
   </b-form>
 </div>
 </template>
@@ -11,7 +10,7 @@
   export default {
     computed: {
       item() {
-        return this.$store.state.animals.activeItem
+        return this.$store.state.readers.activeItem
       },
     },
     methods: {
@@ -24,7 +23,7 @@
           headers: {Authorization: this.$auth.$storage._state['_token.local']}
         }).then((response) => {
           // check if successful and reroute to taggeddata page
-          router.push('taggeddata')
+          this.$router.push('readerdata')
         })
       }
     }
