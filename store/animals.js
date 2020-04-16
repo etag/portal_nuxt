@@ -2,20 +2,24 @@ export const state = () => ({
   list: [],     // list of records for current page
   count: 0,     // total number of records
   page: 1,      // track current page
-  pageSize: 10, // number of items to show per page
+  pageSize: 20, // number of items to show per page
+  activeItem: null, // object of active item used for editing
   prev: null,   // url to previous page of content
   next: null,   // url to next page of content
 })
 
 export const mutations = {
-  add (state, tag) {
-    state.list.push(tag)
+  add (state, animal) {
+    state.list.push(animal)
   },
-  appendList(state, tags) {
-    state.list = [].concat.apply(state.list, tags)
+  appendList(state, animals) {
+    state.list = [].concat.apply(state.list, animals)
   },
-  setList(state, tags) {
-    state.list = tags
+  setList(state, animals) {
+    state.list = animals
+  },
+  setActiveItem(state, item) {
+    state.activeItem = item
   },
   setPage(state, page) {
     state.page = page
@@ -32,7 +36,7 @@ export const mutations = {
   setNext(state, next) {
     state.next = next
   },
-  remove (state, { tag }) {
-    state.list.splice(state.list.indexOf(tag), 1)
+  remove (state, { animal }) {
+    state.list.splice(state.list.indexOf(animal), 1)
   }
 }
