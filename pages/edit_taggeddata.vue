@@ -1,28 +1,25 @@
 <template>
-<div>
-    <b-form @submit="onSubmit">
+  <div>
+    <b-form @submit="saveChanges">
       <b-form-group id="input-group-1" label=ANIMAL_CURRENTMARKER label-for="input-1">
         <b-form-input
           id="input-1"
-          required
-          :placeholder="field.ANIMAL_CURRENTMARKER"
+          :placeholder="item.field_data.ANIMAL_CURRENTMARKER"
         ></b-form-input>
       </b-form-group>
 
       <b-form-group id="input-group-2" label="ANIMAL_IDENTIFYINGMARKERSTARTDATE" label-for="input-2">
         <b-form-input
           id="input-2"
-          required
-          :placeholder="field.ANIMAL_IDENTIFYINGMARKERSTARTDATE"
+          :placeholder="item.field_data.ANIMAL_IDENTIFYINGMARKERSTARTDATE"
         ></b-form-input>
       </b-form-group>
 
       <b-form-group id="input-group-3" label="ANIMAL_ORIGINALMARKER" label-for="input-3">
-        <b-form-select
+        <b-form-input
           id="input-3"
-          required
-          :placeholder="field.ANIMAL_ORIGINALMARKER"
-        ></b-form-select>
+          :placeholder="item.field_data.ANIMAL_ORIGINALMARKER"
+        ></b-form-input>
       </b-form-group>
 
       <b-button type="submit" variant="primary">Submit</b-button>
