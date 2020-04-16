@@ -48,6 +48,11 @@ export default {
             //  'Access-Control-Allow-Origin': '*'
               }
           },
+          refresh: {
+            url: '/api/api-token-refresh/?format=json',
+            method: 'post',
+            propertyName: 'token'
+          },
           //logout: {
           //  url: '/api/api-auth/logout/',
           //  method: 'post',
@@ -67,6 +72,7 @@ export default {
             //xsrfHeaderName: "X-CSRFTOKEN"
           },
         },
+        autoRefresh: true,
         tokenRequired: true,
         tokenType: 'JWT',
         watchLoggedIn: true,
@@ -107,7 +113,9 @@ export default {
     // Doc: ???
     '@nuxtjs/proxy',
     // Doc: ???
-    'nuxt-leaflet'
+    'nuxt-leaflet',
+    // Doc: ???
+    'nuxt-fontawesome'
   ],
   /*
   ** Axios module configuration
@@ -117,6 +125,18 @@ export default {
     // proxy: true,
     baseURL: process.env.baseurl,
     // rejectUnauthorized: false,
+  },
+  /*
+  ** Font Awesome configuration
+  ** See https://github.com/vaso2/nuxt-fontawesome#readme
+  */
+  fontawesome: {
+    imports: [
+      {
+        set: '@fortawesome/free-solid-svg-icons',
+        icons: ['fas']
+      }
+    ]
   },
   /*
   ** Proxy configuration
