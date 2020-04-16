@@ -81,7 +81,7 @@
         filetype: 'tags',  // This is used by the backend for processing file upload
         api_callback: 'etagq.tasks.tasks.etagDataUpload',  // This is the full name of the upload task in cyberCommons
         baseUrl: process.env.baseUrl,
-        gotoPate: null,  // This holds the user supplied page number to directly goto for pagination
+        gotoPage: null,  // This holds the user supplied page number to directly goto for pagination
         options: {
           dictDefaultMessage: 'Drop file here or click to upload.',
           acceptedFiles: '.csv',
@@ -130,7 +130,9 @@
       async fetchPage(url) {
         let { data } = await this.$axios.get(url.replace(this.baseUrl, ""))
         this.$store.commit('tagReads/setList', data.results)
-        this.$store.commit('tagReads/setPage', parseInt(url.match(/(?<=page=)[0-9]+/g)))  // extract page number from url
+        // regex lookbehind is not supported in several browsers - https://caniuse.com/#feat=js-regexp-lookbehind
+        // this.$store.commit('tagReads/setPage', parseInt(url.match(/(?<=page=)[0-9]+/g)))  // extract page number from url
+        this.$store.commit('tagReads/setPage', parseInt(url.match(/page=[0-9]+/g)[0].replace('page=','')))
         this.$store.commit('tagReads/setPrev', data.previous)
         this.$store.commit('tagReads/setNext', data.next)
       },

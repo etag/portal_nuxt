@@ -128,7 +128,9 @@
       async fetchPage(url) {
         let { data } = await this.$axios.get(url.replace(this.baseUrl, ""))
         this.$store.commit('readers/setList', data.results)
-        this.$store.commit('readers/setPage', parseInt(url.match(/(?<=page=)[0-9]+/g)))  // extract page number from url
+        // regex lookbehind is not supported in several browsers - https://caniuse.com/#feat=js-regexp-lookbehind
+        // this.$store.commit('readers/setPage', parseInt(url.match(/(?<=page=)[0-9]+/g)))  // extract page number from url
+        this.$store.commit('readers/setPage', parseInt(url.match(/page=[0-9]+/g)[0].replace('page=','')))
         this.$store.commit('readers/setPrev', data.previous)
         this.$store.commit('readers/setNext', data.next)
       },
