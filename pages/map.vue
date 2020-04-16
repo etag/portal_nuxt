@@ -139,9 +139,9 @@ import tag_animal_json from '../data/tag_animal.json';
         //selected: [],
         datatype_sel: '',
         opt_displaytype: '',
-        date0_s: new Date('2010-01-01').getTime() / 1000,
-        date1_s: new Date('2014-01-01').getTime() / 1000,
-        date_value:[new Date('2010-01-01').getTime() / 1000,new Date('2014-01-01').getTime() / 1000],
+        date0_s: new Date('2011-04-01').getTime() / 1000,
+        date1_s: new Date('2012-01-01').getTime() / 1000,
+        date_value:[new Date('2011-04-01').getTime() / 1000,new Date('2012-01-01').getTime() / 1000],
         dateformatter: v => new Date(v *1000).toISOString().split("T",1),
         allspecies:[
           {text:'Carolina Chickadee',value:'0416F1BAA0,0416F20F1F,0416F1CADD,0416F1EF53,0416F20B45'},
@@ -366,8 +366,9 @@ import tag_animal_json from '../data/tag_animal.json';
       },
 
       //display raw tag reads
-      display_raw_tag_with_filter(filter_tag) {
+      display_raw_tag_with_filter(filter_tag,filter_date) {
             var tagfilterflag = (filter_tag.length > 0);
+            var datefilterflag = (filter_date.length > 0);
             //alert(filter_tag.length);
             //alert(filter_tag.includes('0416F1DB87'));
             var icount = 0;
@@ -377,10 +378,19 @@ import tag_animal_json from '../data/tag_animal.json';
               var animal_id, animal_species;
               var reader_s_time,reader_e_time; //not used
               var accessory_data;
+              var time_str,tag_read_date;
               for (var i=0; i<this.tag_reads.length; i++) {
                     reader_id = this.tag_reads[i]['reader_id'];
                     tag_id = this.tag_reads[i]['tag_id'];
                     if (tagfilterflag && !filter_tag.includes(tag_id)) {continue;}
+                    if (datefilterflag) {
+                      //new Date('2000-01-01').getTime() / 1000
+                      //only count date
+                      time_str = this.tag_reads[i]['tag_read_time'].split("T")[0];
+                      tag_read_date = new Date(time_str).getTime() / 1000;
+                      if (tag_read_date < filter_date[0] || tag_read_date > filter_date[1])
+                        {continue;}
+                    }
                     popinfo = '<p style="font-size:18px"><strong>Tag ID: </strong>' + tag_id + "</p>";
                     popinfo += '<span style="font-size:16px">';
                     if (this.tag_animal_dict.hasOwnProperty(tag_id)) {
@@ -438,7 +448,15 @@ import tag_animal_json from '../data/tag_animal.json';
           tag_filter_list.push(tag_filter);
         }
         //alert(tag_filter_list);  
-        this.display_raw_tag_with_filter(tag_filter_list.flat());
+        //date filter
+        var date_filter = [];
+        var date0 = this.date_value[0];
+        var date1 = this.date_value[1];
+        if (date0 != this.date0_s || date1 != this.date1_s) {
+          date_filter.push(date0,date1);}
+          // else { alert("not time fileter");}
+
+        this.display_raw_tag_with_filter(tag_filter_list.flat(),date_filter);
       },
 
       // clear map 
