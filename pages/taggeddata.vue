@@ -9,7 +9,6 @@
       :items="items"
       :fields="fields"
     >
-      <!--<template v-slot="actions" slot-scope="row">-->
       <template v-slot:cell(actions)="row">
         <!-- We use @click.stop here to prevent a 'row-clicked' event from also happening -->
         <b-button size="sm" @click.stop="editRecord(row)" class="mr-1" variant="primary">
@@ -20,12 +19,18 @@
         </b-button>
       </template>
     </b-table>
-    <b-button @click="fetchFirst"><font-awesome-icon icon="backward" /></b-button>
-    <b-button @click="fetchPrev" :disabled="!prevUrl"><font-awesome-icon icon="angle-left" /></b-button>
-    page {{ page }} of {{ totalPages }}
-    <b-button @click="fetchNext" :disabled="!nextUrl"><font-awesome-icon icon="angle-right" /></b-button>
-    <b-button @click="fetchLast"><font-awesome-icon icon="forward" /></b-button>
-    <input v-model="gotoPage" placeholder="page #" style="max-width: 70px"><b-button @click="fetchPageByNumber">Go</b-button>
+
+    <b-container fluid="sm">
+      <b-button @click="fetchFirst"><font-awesome-icon icon="backward" /></b-button>
+      <b-button @click="fetchPrev" :disabled="!prevUrl"><font-awesome-icon icon="angle-left" /></b-button>
+      page {{ page }} of {{ totalPages }}
+      <b-button @click="fetchNext" :disabled="!nextUrl"><font-awesome-icon icon="angle-right" /></b-button>
+      <b-button @click="fetchLast"><font-awesome-icon icon="forward" /></b-button>
+      <input v-model="gotoPage" placeholder="page #" style="max-width: 70px"><b-button @click="fetchPageByNumber">Go</b-button>
+
+      <b-button type="button" @click="downloadTemplate"><font-awesome-icon icon="file-csv" /><span> Download Template </span></b-button>
+      <b-button type="button" @click="downloadData"><font-awesome-icon icon="cloud-download-alt" /><span> Download Data </span></b-button>
+    </b-container>
 
     <dropzone id="dzfile" ref="el"
       :options="options"
@@ -34,9 +39,6 @@
       @vdropzone-sending="sendingEvent"
       @vdropzone-success="successEvent"
     />
-
-    <b-button type="button" @click="downloadTemplate"><font-awesome-icon icon="file-csv" /><span> Download Template </span></b-button>
-    <b-button type="button" @click="downloadData"><font-awesome-icon icon="cloud-download-alt" /><span> Download Data </span></b-button>
 
   </div>
 </template>
@@ -123,7 +125,7 @@ export default {
     async fetchPage(url) {
       let { data } = await this.$axios.get(url.replace(this.baseUrl, ""))
       this.$store.commit('animals/setList', data.results)
-      this.$store.commit('animals/setPage', parseInt(url.match(/(?<=page=)[0-9]+/g)))  // extract page number from url
+      //this.$store.commit('animals/setPage', parseInt(url.match(/(?<=page=)[0-9]+/g)))  // extract page number from url
       this.$store.commit('animals/setPrev', data.previous)
       this.$store.commit('animals/setNext', data.next)
     },
@@ -179,11 +181,9 @@ export default {
     },
     downloadTemplate() {
       this.downloadFile('api/etag/file-template/?filetype=animals', 'taggeddata_template.csv')
-      //location.href = 'api/etag/file-template/?filetype=animals'
     },
     downloadData() {
       this.downloadFile('api/etag/file-download/?format=csv&filetype=animals', 'taggeddata.csv')
-      //location.href = 'api/etag/file-download/?format=csv&filetype=animals'
     },
     failEvent(file, message, xhr) {
       console.log(file)
