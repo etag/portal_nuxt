@@ -1,10 +1,33 @@
 <template>
 <div>
-  <b-form @submit="saveChanges">
-    {{ item.url }}
-    {{ item.species }}
-  </b-form>
-</div>
+    <b-form @submit="onSubmit">
+      <b-form-group id="input-group-1" label=ANIMAL_CURRENTMARKER label-for="input-1">
+        <b-form-input
+          id="input-1"
+          required
+          :placeholder="field.ANIMAL_CURRENTMARKER"
+        ></b-form-input>
+      </b-form-group>
+
+      <b-form-group id="input-group-2" label="ANIMAL_IDENTIFYINGMARKERSTARTDATE" label-for="input-2">
+        <b-form-input
+          id="input-2"
+          required
+          :placeholder="field.ANIMAL_IDENTIFYINGMARKERSTARTDATE"
+        ></b-form-input>
+      </b-form-group>
+
+      <b-form-group id="input-group-3" label="ANIMAL_ORIGINALMARKER" label-for="input-3">
+        <b-form-select
+          id="input-3"
+          required
+          :placeholder="field.ANIMAL_ORIGINALMARKER"
+        ></b-form-select>
+      </b-form-group>
+
+      <b-button type="submit" variant="primary">Submit</b-button>
+    </b-form>
+  </div>
 </template>
 
 <script>
@@ -24,7 +47,7 @@
           headers: {Authorization: this.$auth.$storage._state['_token.local']}
         }).then((response) => {
           // check if successful and reroute to taggeddata page
-          router.push('taggeddata')
+          this.$router.push('taggeddata')
         })
       }
     }
