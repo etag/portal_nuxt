@@ -2,7 +2,8 @@
 export default {
   mode: 'spa',
   env: {
-    baseUrl: 'http://localhost'
+    // baseUrl: 'http://localhost'
+    baseUrl: 'https://head.ouetag.org'
   },
   /*
   ** Headers of the page
@@ -114,7 +115,8 @@ export default {
   ** Proxy configuration
   */
   proxy: {
-    '/api': 'http://localhost'
+    //'/api': 'http://localhost'
+    '/api': 'http://head.ouetag.org'
   },
   /*
   ** Router configuration

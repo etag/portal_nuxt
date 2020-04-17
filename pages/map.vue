@@ -121,139 +121,183 @@ import tag_reads_json from '../data/tag_reads_1000.json';
 import animals_json from '../data/animals.json';
 import tag_animal_json from '../data/tag_animal.json';
 
-  export default {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export default {
     auth: false, // do not require to be logged in to view this page
     components: {
-    VueSlider
+        VueSlider
     },
     mounted() {
-      this.initMap();
-      //var map =  this.$refs.map.mapObject;
-      //var sidebar = L.control.sidebar('sidebar').addTo(map);
-      this.getGeoLocation();  
+        this.initMap();
+        //var map =  this.$refs.map.mapObject;
+        //var sidebar = L.control.sidebar('sidebar').addTo(map);
+        this.getGeoLocation();  
     },
     data () {
-      return {
-        sidebar: '',
-        center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
-        //selected: [],
-        datatype_sel: '',
-        opt_displaytype: '',
-        date0_s: new Date('2011-04-01').getTime() / 1000,
-        date1_s: new Date('2012-01-01').getTime() / 1000,
-        date_value:[new Date('2011-04-01').getTime() / 1000,new Date('2012-01-01').getTime() / 1000],
-        dateformatter: v => new Date(v *1000).toISOString().split("T",1),
-        allspecies:[
-          {text:'Carolina Chickadee',value:'0416F1BAA0,0416F20F1F,0416F1CADD,0416F1EF53,0416F20B45'},
-          {text:'Dark-eyed Junco',value:'TU0005CD'},
-          {text:'Downey Woodpecker',value:'0416F20590'},
-          {text:'Northern Cardinal',value:'TU200005BB'},
-          {text:'Purple Martin',value:'TU0000720,BFBFBFBFBF,0416F1D055'},
-          {text:'Tufted titmouse',value:'0416F1E5F8,0416F204E3,0416F208FC'},
-          {text:'Window Dove',value:'0416F1DB87'},
-          ],
-        alltagid:[
-            {text:'0416F1DB87',value:'0416F1DB87'}, 
-            {text:'0416F1E5F8',value:'0416F1E5F8'}, 
-            {text:'0416F1BAA0',value:'0416F1BAA0'}, 
-            {text:'0416F208FC',value:'0416F208FC'}, 
-            {text:'0416F1D055',value:'0416F1D055'}, 
-            {text:'BFBFBFBFBF',value:'BFBFBFBFBF'}, 
-            {text:'0416F20590',value:'0416F20590'}, 
-            {text:'0416F204E3',value:'0416F204E3'}, 
-            {text:'0416F20F1F',value:'0416F20F1F'}, 
-            {text:'TU200005BB',value:'TU200005BB'}, 
-            {text:'0416F1CADD',value:'0416F1CADD'}, 
-            {text:'0416F1EF53',value:'0416F1EF53'}, 
-            {text:'0416F20B45',value:'0416F20B45'}, 
-            {text:'TU0000720', value:'TU0000720'}, 
-            {text:'TU0005CD', value:'TU0005CD'},
+        return {
+            sidebar: '',
+            center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
+            //selected: [],
+            datatype_sel: '',
+            opt_displaytype: '',
+            date0_s: new Date('2011-04-01').getTime() / 1000,
+            date1_s: new Date('2012-01-01').getTime() / 1000,
+            date_value:[new Date('2011-04-01').getTime() / 1000,new Date('2012-01-01').getTime() / 1000],
+            dateformatter: v => new Date(v *1000).toISOString().split("T",1),
+            allspecies:[
+                {text:'Carolina Chickadee',value:'0416F1BAA0,0416F20F1F,0416F1CADD,0416F1EF53,0416F20B45'},
+                {text:'Dark-eyed Junco',value:'TU0005CD'},
+                {text:'Downey Woodpecker',value:'0416F20590'},
+                {text:'Northern Cardinal',value:'TU200005BB'},
+                {text:'Purple Martin',value:'TU0000720,BFBFBFBFBF,0416F1D055'},
+                {text:'Tufted titmouse',value:'0416F1E5F8,0416F204E3,0416F208FC'},
+                {text:'Window Dove',value:'0416F1DB87'},
             ],
-        tag_reads_summary: {
-          "T1B": {"0416F1E5F8": 60, "0416F20B45": 15, "0416F208FC": 8},
-          "T2A": {"BFBFBFBFBF": 1, "0416F1DB87": 1, "0416F1D055": 5}, 
-          "T2B": {"0416F204E3": 61, "0416F20B45": 22, "0416F1E5F8": 48, "0416F1BAA0": 13, "0416F1CADD": 2, "BFBFBFBFBF": 1, "0416F1DB87": 1}, 
-          "T2C": {"0416F204E3": 556, "0416F208FC": 120, "0416F1EF53": 1, "0416F20B45": 12, "0416F20590": 1, "BFBFBFBFBF": 2, "0416F1DB87": 1},
-          "T1A": {"0416F20F1F": 16, "0416F1E5F8": 3, "0416F208FC": 7, "0416F1D055": 9, "BFBFBFBFBF": 5, "0416F1DB87": 1},
-          "TU109876": {"TU0000720": 16, "TU200005BB": 4, "TU0005CD": 8},
-        },
-        readers: readers_json.results,
-        locations: locations_json.results,
-        reader_location: reader_location_json.results,
-        tag_reads: tag_reads_json.results,
-        animals:animals_json.results,
-        tag_animal: tag_animal_json.results,
-        //readers_marker: L.featureGroup(),
-        readers_marker: L.markerClusterGroup(),
-      }
+            alltagid:[
+                {text:'0416F1DB87',value:'0416F1DB87'}, 
+                {text:'0416F1E5F8',value:'0416F1E5F8'}, 
+                {text:'0416F1BAA0',value:'0416F1BAA0'}, 
+                {text:'0416F208FC',value:'0416F208FC'}, 
+                {text:'0416F1D055',value:'0416F1D055'}, 
+                {text:'BFBFBFBFBF',value:'BFBFBFBFBF'}, 
+                {text:'0416F20590',value:'0416F20590'}, 
+                {text:'0416F204E3',value:'0416F204E3'}, 
+                {text:'0416F20F1F',value:'0416F20F1F'}, 
+                {text:'TU200005BB',value:'TU200005BB'}, 
+                {text:'0416F1CADD',value:'0416F1CADD'}, 
+                {text:'0416F1EF53',value:'0416F1EF53'}, 
+                {text:'0416F20B45',value:'0416F20B45'}, 
+                {text:'TU0000720', value:'TU0000720'}, 
+                {text:'TU0005CD', value:'TU0005CD'},
+            ],
+            tag_reads_summary: {
+                "T1B": {"0416F1E5F8": 60, "0416F20B45": 15, "0416F208FC": 8},
+                "T2A": {"BFBFBFBFBF": 1, "0416F1DB87": 1, "0416F1D055": 5}, 
+                "T2B": {"0416F204E3": 61, "0416F20B45": 22, "0416F1E5F8": 48, "0416F1BAA0": 13, "0416F1CADD": 2, "BFBFBFBFBF": 1, "0416F1DB87": 1}, 
+                "T2C": {"0416F204E3": 556, "0416F208FC": 120, "0416F1EF53": 1, "0416F20B45": 12, "0416F20590": 1, "BFBFBFBFBF": 2, "0416F1DB87": 1},
+                "T1A": {"0416F20F1F": 16, "0416F1E5F8": 3, "0416F208FC": 7, "0416F1D055": 9, "BFBFBFBFBF": 5, "0416F1DB87": 1},
+                "TU109876": {"TU0000720": 16, "TU200005BB": 4, "TU0005CD": 8},
+            },
+            //readers: readers_json.results,
+            //locations: locations_json.results,
+            //reader_location: reader_location_json.results,
+            //tag_reads: tag_reads_json.results,
+            //animals:animals_json.results,
+            //tag_animal: tag_animal_json.results,
+            readers_marker: L.featureGroup(),
+            readers_marker: L.markerClusterGroup(),
+        }
     },
     computed: {
-      map: function () {return this.$refs.map.mapObject},
-      osm: function () {return this.$refs.osm.mapObject},
-      reader_location_dict: function() {
-          var new_dict = {};
-          var reader_id,location_id,r_lat,r_lon;
-          var starttime, endtime;
-          for (var i=0; i<this.reader_location.length; i++) {
-              reader_id = this.reader_location[i]['reader_id'];
-              location_id = this.reader_location[i]['location_id'];
-              starttime = this.reader_location[i]['start_timestamp'];
-              endtime = this.reader_location[i]['end_timestamp'];
-              //find lat,lon by location id
-              for (var j=0;j< this.locations.length;j++) {
-                  if (location_id == this.locations[j]['location_id']){
+        map: function () {return this.$refs.map.mapObject},
+        osm: function () {return this.$refs.osm.mapObject},
+        readers: function() {
+          let result = {}
+          this.fetchAll('/api/etag/readers/?page_size=100&format=json', result)
+          return result
+        },
+        locations: function() {
+          let result = {}
+          this.fetchAll('/api/etag/locations/?page_size=100&format=json', result)
+          return result
+        },
+        reader_location: function() {
+          let result = {}
+          this.fetchAll('/api/etag/reader_location/?page_size=100&format=json', result)
+          return result
+        },
+        tag_reads: function() {
+          let result = {}
+          this.fetchAll('/api/etag/tag_reads/?page_size=100&format=json', result)
+          return result
+        },
+        animals: function() {
+          let result = {}
+          this.fetchAll('/api/etag/animals/?page_size=100&format=json', result)
+          return result
+        },
+        tag_animal: function() {
+          let result = {}
+          this.fetchAll('/api/etag/tag_animal/?page_size=1000&format=json', result)
+          return result
+        },
+        reader_location_dict: function() {
+            var new_dict = {};
+            var reader_id,location_id,r_lat,r_lon;
+            var starttime, endtime;
+            for (var i=0; i<this.reader_location.length; i++) {
+                reader_id = this.reader_location[i]['reader_id'];
+                location_id = this.reader_location[i]['location_id'];
+                starttime = this.reader_location[i]['start_timestamp'];
+                endtime = this.reader_location[i]['end_timestamp'];
+                //find lat,lon by location id
+                for (var j=0;j< this.locations.length;j++) {
+                    if (location_id == this.locations[j]['location_id']){
                         r_lat = this.locations[j]['latitude'];
                         r_lon = this.locations[j]['longitude'];
                         new_dict[reader_id] = [r_lat,r_lon,starttime,endtime];
                         break;
-                  };
-              }
+                    };
+                }
             }
-          return new_dict;
+            return new_dict;
         },
-      tag_animal_dict: function() {
-        var new_dict = {}
-        var tag_id,animal_id,animal_name;
-        for (var i=0; i<this.tag_animal.length;i++) {
-          tag_id = this.tag_animal[i]['tag_id'];
-          animal_id = this.tag_animal[i]['animal_id'];
-          for (var j=0;j< this.animals.length;j++) { 
-            if (animal_id == this.animals[j]['animal_id']) {
-              new_dict[tag_id] = [animal_id, this.animals[j]['species']];
-              break;
+        tag_animal_dict: function() {
+            var new_dict = {}
+            var tag_id,animal_id,animal_name;
+            for (var i=0; i<this.tag_animal.length;i++) {
+                tag_id = this.tag_animal[i]['tag_id'];
+                animal_id = this.tag_animal[i]['animal_id'];
+                for (var j=0;j< this.animals.length;j++) { 
+                    if (animal_id == this.animals[j]['animal_id']) {
+                        new_dict[tag_id] = [animal_id, this.animals[j]['species']];
+                        break;
+                    }
+                }
             }
-          }
-        }
-        // for demo purpose
-        // TU0000720 16 2 Purple Martin
-        // 0416F1D055 14 7 Purple Martin
-        // BFBFBFBFBF 9 17 Purple Martin
-        new_dict['TU0000720'] =[2,'Purple Martin'];
-        new_dict['0416F1D055'] =[7,'Purple Martin'];
-        new_dict['BFBFBFBFBF'] =[17,'Purple Martin'];
-        // TU0005CD 8 75 "Dark-eyed Junco
-        new_dict['TU0005CD'] =[75,'Dark-eyed Junco'];
-        // 0416F1DB87 4 1 Window Dove
-        new_dict['0416F1DB87'] =[1,'Window Dove'];
-        // TU200005BB 4 71 Northern Cardinal
-        new_dict['TU200005BB'] =[71,'Northern Cardinal'];
-        // 0416F20590 1 67 Downey Woodpecker
-        new_dict['0416F20590'] =[67,'Downey Woodpecker'];
-        return new_dict;
-      },
+            // for demo purpose
+            // TU0000720 16 2 Purple Martin
+            // 0416F1D055 14 7 Purple Martin
+            // BFBFBFBFBF 9 17 Purple Martin
+            new_dict['TU0000720'] =[2,'Purple Martin'];
+            new_dict['0416F1D055'] =[7,'Purple Martin'];
+            new_dict['BFBFBFBFBF'] =[17,'Purple Martin'];
+            // TU0005CD 8 75 "Dark-eyed Junco
+            new_dict['TU0005CD'] =[75,'Dark-eyed Junco'];
+            // 0416F1DB87 4 1 Window Dove
+            new_dict['0416F1DB87'] =[1,'Window Dove'];
+            // TU200005BB 4 71 Northern Cardinal
+            new_dict['TU200005BB'] =[71,'Northern Cardinal'];
+            // 0416F20590 1 67 Downey Woodpecker
+            new_dict['0416F20590'] =[67,'Downey Woodpecker'];
+            return new_dict;
+        },
     },
     methods: {
-      initMap: function() {
-        //var map =  this.$refs.map.mapObject;
-        this.sidebar = L.control.sidebar('sidebar').addTo(this.map);
-      },
-      getGeoLocation () {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(position => {
-            this.center = [position.coords.latitude, position.coords.longitude];
-          })
-        }
-      },
+        initMap: function() {
+            //var map =  this.$refs.map.mapObject;
+            this.sidebar = L.control.sidebar('sidebar').addTo(this.map);
+        },
+        getGeoLocation () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    this.center = [position.coords.latitude, position.coords.longitude];
+                })
+            }
+        },
+        fetchAll: async function(url, results) {
+          let data = await this.$axios.get(url).then(response => response.json());
+          while (data.next != null) {
+            results = [].concat.apply(this.results, data.results);
+            data = await this.$axios.get(data.next).then(response => response.json());
+            await sleep(100)
+          }
+          results = [].concat.apply(this.results, data.results);
+        },
+        
       // display data
       datatype_onChange(val) {
       this.clear_map();
