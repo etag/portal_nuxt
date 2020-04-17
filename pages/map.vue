@@ -283,14 +283,15 @@ export default {
             }
         },
         fetchAll: async function(url) {
-          let results = [];
-          let data = await this.$axios.get(url).then(response => response.data);
-          while (data.next != null) {
-            results = [].concat.apply(results, data.results);
-            data = await this.$axios.get(data.next).then(response => response.data);
-            await sleep(100)
-          }
-          return [].concat.apply(results, data.results);
+            let axios = this.$axios;
+            let results = [];
+            let data = await axios.get(url.replace(process.env.baseUrl, "")).then(response => response.data);
+            while (data.next != null) {
+                results = [].concat.apply(results, data.results);
+                data = await axios.get(data.next.replace(process.env.baseUrl, "")).then(response => response.data);
+                await sleep(100)
+            }
+            return [].concat.apply(results, data.results);
         },
         
       // display data
