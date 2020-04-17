@@ -194,35 +194,29 @@ export default {
     computed: {
         map: function () {return this.$refs.map.mapObject},
         osm: function () {return this.$refs.osm.mapObject},
-        readers: function() {
-          let result = {}
-          this.fetchAll('/api/etag/readers/?page_size=100&format=json', result)
-          return result
+        async readers () {
+          let result = await this.fetchAll('/api/etag/readers/?page_size=100&format=json');
+          return result;
         },
-        locations: function() {
-          let result = {}
-          this.fetchAll('/api/etag/locations/?page_size=100&format=json', result)
-          return result
+        async locations () {
+          let result = await this.fetchAll('/api/etag/locations/?page_size=100&format=json');
+          return result;
         },
-        reader_location: function() {
-          let result = {}
-          this.fetchAll('/api/etag/reader_location/?page_size=100&format=json', result)
-          return result
+        async reader_location () {
+          let result = await this.fetchAll('/api/etag/reader_location/?page_size=100&format=json');
+          return result;
         },
-        tag_reads: function() {
-          let result = {}
-          this.fetchAll('/api/etag/tag_reads/?page_size=100&format=json', result)
-          return result
+        async tag_reads () {
+          let result = await this.fetchAll('/api/etag/tag_reads/?page_size=100&format=json');
+          return result;
         },
-        animals: function() {
-          let result = {}
-          this.fetchAll('/api/etag/animals/?page_size=100&format=json', result)
-          return result
+        async animals () {
+          let result =  await this.fetchAll('/api/etag/animals/?page_size=100&format=json');
+          return result;
         },
-        tag_animal: function() {
-          let result = {}
-          this.fetchAll('/api/etag/tag_animal/?page_size=1000&format=json', result)
-          return result
+        async tag_animal () {
+          let result =  this.fetchAll('/api/etag/tag_animal/?page_size=1000&format=json');
+          return result;
         },
         reader_location_dict: function() {
             var new_dict = {};
@@ -288,14 +282,15 @@ export default {
                 })
             }
         },
-        fetchAll: async function(url, results) {
-          let data = await this.$axios.get(url).then(response => response.json());
+        fetchAll: async function(url) {
+          let results = [];
+          let data = await this.$axios.get(url).then(response => response.data);
           while (data.next != null) {
-            results = [].concat.apply(this.results, data.results);
-            data = await this.$axios.get(data.next).then(response => response.json());
+            results = [].concat.apply(results, data.results);
+            data = await this.$axios.get(data.next).then(response => response.data);
             await sleep(100)
           }
-          results = [].concat.apply(this.results, data.results);
+          return [].concat.apply(results, data.results);
         },
         
       // display data
