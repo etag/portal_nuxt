@@ -1,9 +1,10 @@
 
 export default {
-  mode: 'spa',
+  mode: 'spa',  // single page application
   env: {
-    // baseUrl: 'http://localhost'
+    // baseUrl: 'https://ec2-54-186-103-38.us-west-2.compute.amazonaws.com',
     baseUrl: 'https://head.ouetag.org'
+    // baseUrl: 'http://localhost'
   },
   /*
   ** Headers of the page
@@ -47,6 +48,11 @@ export default {
             //  'Access-Control-Allow-Origin': '*'
               }
           },
+          refresh: {
+            url: '/api/api-token-refresh/?format=json',
+            method: 'post',
+            propertyName: 'token'
+          },
           //logout: {
           //  url: '/api/api-auth/logout/',
           //  method: 'post',
@@ -66,6 +72,7 @@ export default {
             //xsrfHeaderName: "X-CSRFTOKEN"
           },
         },
+        autoRefresh: true,
         tokenRequired: true,
         tokenType: 'JWT',
         watchLoggedIn: true,
@@ -81,12 +88,17 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/axios'
+    '~/plugins/axios',
+    { src: '~/plugins/notifications', ssr: false }
+
   ],
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    ['@nuxtjs/google-analytics', {
+      id: 'UA-152397799-1'
+    }]
   ],
   /*
   ** Nuxt.js modules
@@ -101,22 +113,38 @@ export default {
     // Doc: ???
     '@nuxtjs/proxy',
     // Doc: ???
-    'nuxt-leaflet'
+    'nuxt-leaflet',
+    // Doc: ???
+    'nuxt-fontawesome'
   ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    proxy: true,
-    //baseURL: 'http://localhost'
+    // proxy: true,
+    baseURL: process.env.baseurl,
+    // rejectUnauthorized: false,
+  },
+  /*
+  ** Font Awesome configuration
+  ** See https://github.com/vaso2/nuxt-fontawesome#readme
+  */
+  fontawesome: {
+    imports: [
+      {
+        set: '@fortawesome/free-solid-svg-icons',
+        icons: ['fas']
+      }
+    ]
   },
   /*
   ** Proxy configuration
   */
   proxy: {
+    // '/api': 'https://ec2-54-186-103-38.us-west-2.compute.amazonaws.com'
+    '/api': 'https://head.ouetag.org'
     //'/api': 'http://localhost'
-    '/api': 'http://head.ouetag.org'
   },
   /*
   ** Router configuration
