@@ -114,12 +114,12 @@ import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/default.css';
 
 // import json data for demo purpose only
-import readers_json from "../data/readers.json";
-import locations_json from '../data/locations.json';
-import reader_location_json from '../data/reader_location.json';
-import tag_reads_json from '../data/tag_reads_1000.json';
-import animals_json from '../data/animals.json';
-import tag_animal_json from '../data/tag_animal.json';
+// import readers_json from "../data/readers.json";
+// import locations_json from '../data/locations.json';
+// import reader_location_json from '../data/reader_location.json';
+// import tag_reads_json from '../data/tag_reads_1000.json';
+// import animals_json from '../data/animals.json';
+// import tag_animal_json from '../data/tag_animal.json';
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -299,6 +299,7 @@ export default {
       this.clear_map();
       this.readers_marker.clearLayers();
       if (val == "readers") {
+        alert(this.readers);
             var reader_id, reader_desc, reader_lat,reader_lon,reader_s_time,reader_e_time;
             var popinfo;
             for (var i=0; i<this.readers.length; i++) {
