@@ -46,14 +46,14 @@
                 <h4>Filters</h4>
                 <div class="border-top my-3"></div>
                 <h6>Species</h6>
-                <select  class="selectpicker"  ref='select1'  id="species_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
-                    <option v-for="option in allspecies" v-bind:value="option.value">
-                        {{ option.text }}
+                <select  v-model="selected" class="selectpicker"  ref='select1'  id="species_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
+                    <option v-for="(item,key,index) in allspecies" v-bind:value="item">
+                        {{ key }}
                     </option>
                 </select>
 
                 <h6>Tag ID</h6>
-                          <select  class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
+                      <select  v-model="selected" class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
                     <option v-for="option in alltagid" v-bind:value="option">
                         {{ option}}
                     </option>
@@ -68,9 +68,8 @@
                 <div align="center" display="block" style="width:85%;margin-left: 5%;">
                 <vue-slider v-model="date_value" :min=date0_s :max=date1_s :interval=86400 :enable-cross="false"  :tooltip="'always'" :tooltip-placement="['bottom', 'bottom']" :tooltip-formatter="dateformatter"></vue-slider>
                 </div>
-                <!--
+                
                   <br><div class="mt-3">Selected: <strong>{{ selected }}</strong></div></br>
-                -->
                 <br/><br/>
                 <button type="button" class="btn btn-primary btn-sm btn-block" @click="apply_filters"><strong>Apply Filters</strong></button>  
 
@@ -140,23 +139,13 @@ export default {
         return {
             sidebar: '',
             center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
-            //selected: [],
+            selected: [],
             datatype_sel: '',
             opt_displaytype: '',
             date0_s: new Date('2011-04-01').getTime() / 1000,
             date1_s: new Date('2012-01-01').getTime() / 1000,
             date_value:[new Date('2011-04-01').getTime() / 1000,new Date('2012-01-01').getTime() / 1000],
             dateformatter: v => new Date(v *1000).toISOString().split("T",1),
-
-            allspecies:[
-                {text:'Carolina Chickadee',value:'0416F1BAA0,0416F20F1F,0416F1CADD,0416F1EF53,0416F20B45'},
-                {text:'Dark-eyed Junco',value:'TU0005CD'},
-                {text:'Downey Woodpecker',value:'0416F20590'},
-                {text:'Northern Cardinal',value:'TU200005BB'},
-                {text:'Purple Martin',value:'TU0000720,BFBFBFBFBF,0416F1D055'},
-                {text:'Tufted titmouse',value:'0416F1E5F8,0416F204E3,0416F208FC'},
-                {text:'Window Dove',value:'0416F1DB87'},
-            ],
 
             tag_reads_summary: {
                 "35": {"01103F4B9D": 1, "01103F6189": 662, "011016DF6B": 287}, 
@@ -229,6 +218,21 @@ export default {
                 }
             }
             return new_dict;
+        },
+        allspecies: function () {
+          // reverse tag_animal_dict
+          // dict: species: tagid,tagid,tagid...
+          var new_dict = {};
+          var animal;
+          for (var tagid in this.tag_animal_dict) {
+            animal = this.tag_animal_dict[tagid][1];
+            if (new_dict.hasOwnProperty(animal)) {
+                new_dict[animal] = new_dict[animal] + "," + tagid;
+            } else {
+               new_dict[animal] = tagid ;
+            }
+          }
+          return new_dict;
         },
 
         alltagid: function () {
