@@ -130,7 +130,7 @@
       async fetchPage(url) {
         let { data } = await this.$axios.get(url.replace(this.baseUrl, ""))
         this.$store.commit('tagReads/setList', data.results)
-        this.$store.commit('tagReads/setPage', parseInt(url.match(/(?<=page=)[0-9]+/g)))  // extract page number from url
+        //this.$store.commit('tagReads/setPage', parseInt(url.match(/(?<=page=)[0-9]+/g)))  // extract page number from url
         this.$store.commit('tagReads/setPrev', data.previous)
         this.$store.commit('tagReads/setNext', data.next)
       },
