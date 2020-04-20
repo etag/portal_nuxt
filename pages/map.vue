@@ -296,6 +296,7 @@ export default {
               var animal_id, animal_species;
               var reader_s_time,reader_e_time; //not used
               var accessory_data;
+              var icount = 0;
               for (var i=0; i<this.tag_reads.length; i++) {
                     reader_id = this.tag_reads[i]['reader_id'];
                     tag_id = this.tag_reads[i]['tag_id'];
@@ -307,7 +308,9 @@ export default {
                       popinfo += '<strong>Animal Species: </strong>' + animal_species + "<br>";
                     } 
                     //[reader_lat, reader_lon,reader_s_time,reader_e_time]= extract_reader_location(reader_id);
+                    if (reader_id in this.reader_location_dict) {
                     [reader_lat, reader_lon,reader_s_time,reader_e_time]= this.reader_location_dict[reader_id]; 
+                    } else {continue}; 
                     popinfo += "<strong>Reader ID</strong>: " + this.tag_reads[i]['reader_id']+ "<br>";
                     popinfo += "<strong>Read Time</strong>: " + this.tag_reads[i]['tag_read_time']+ "<br>";
                     popinfo += "<strong>Public</strong>: " + this.tag_reads[i]['public'] + "<br>";
@@ -328,9 +331,14 @@ export default {
                     reader_id = '';
                     tag_id = '';
                     L.marker([reader_lat,reader_lon]).bindPopup(popinfo).addTo(this.readers_marker);
+                    icount += 1;
               }
+            if (icount >= 1) {
               this.map.addLayer(this.readers_marker);
-              this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
+              this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});}
+            else {alert("Found zero record with the current readers!");}
+
+              //this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
           }
           if (optionValue == "tag_summaries") { 
             var reader_id, reader_desc, reader_lat,reader_lon,reader_s_time,reader_e_time;
