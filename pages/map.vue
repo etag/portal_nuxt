@@ -134,7 +134,7 @@ export default {
         this.initMap();
         //var map =  this.$refs.map.mapObject;
         //var sidebar = L.control.sidebar('sidebar').addTo(map);
-        this.getGeoLocation();  
+        this.getGeoLocation();
     },
     data () {
         return {
@@ -182,42 +182,32 @@ export default {
                 "TU109876": {"TU0000720": 16, "TU200005BB": 4, "TU0005CD": 8},
             },
             //readers: readers_json.results,
+            readers: [],
             //locations: locations_json.results,
+            locations: [],
             //reader_location: reader_location_json.results,
+            reader_location: [],
             //tag_reads: tag_reads_json.results,
+            tag_reads: [],
             //animals:animals_json.results,
+            animals: [],
             //tag_animal: tag_animal_json.results,
+            tag_animal: [],
             readers_marker: L.featureGroup(),
             readers_marker: L.markerClusterGroup(),
         }
     },
+    async fetch () {
+        this.readers = await this.fetchAll('/api/etag/readers/?page_size=100&format=json');
+        this.locations = await this.fetchAll('/api/etag/locations/?page_size=100&format=json');
+        this.reader_location = await this.fetchAll('/api/etag/reader_location/?page_size=100&format=json');
+        this.tag_reads = await this.fetchAll('/api/etag/tag_reads/?page_size=1000&format=json');
+        this.animals = await this.fetchAll('/api/etag/animals/?page_size=100&format=json');
+        this.tag_animal = await this.fetchAll('/api/etag/tag_animal/?page_size=100&format=json');
+    },
     computed: {
         map: function () {return this.$refs.map.mapObject},
         osm: function () {return this.$refs.osm.mapObject},
-        async readers () {
-          let result = await this.fetchAll('/api/etag/readers/?page_size=100&format=json');
-          return result;
-        },
-        async locations () {
-          let result = await this.fetchAll('/api/etag/locations/?page_size=100&format=json');
-          return result;
-        },
-        async reader_location () {
-          let result = await this.fetchAll('/api/etag/reader_location/?page_size=100&format=json');
-          return result;
-        },
-        async tag_reads () {
-          let result = await this.fetchAll('/api/etag/tag_reads/?page_size=100&format=json');
-          return result;
-        },
-        async animals () {
-          let result =  await this.fetchAll('/api/etag/animals/?page_size=100&format=json');
-          return result;
-        },
-        async tag_animal () {
-          let result =  this.fetchAll('/api/etag/tag_animal/?page_size=1000&format=json');
-          return result;
-        },
         reader_location_dict: function() {
             var new_dict = {};
             var reader_id,location_id,r_lat,r_lon;
