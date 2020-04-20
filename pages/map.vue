@@ -157,29 +157,16 @@ export default {
                 {text:'Window Dove',value:'0416F1DB87'},
             ],
             alltagid:[
-                {text:'0416F1DB87',value:'0416F1DB87'}, 
-                {text:'0416F1E5F8',value:'0416F1E5F8'}, 
-                {text:'0416F1BAA0',value:'0416F1BAA0'}, 
-                {text:'0416F208FC',value:'0416F208FC'}, 
-                {text:'0416F1D055',value:'0416F1D055'}, 
-                {text:'BFBFBFBFBF',value:'BFBFBFBFBF'}, 
-                {text:'0416F20590',value:'0416F20590'}, 
-                {text:'0416F204E3',value:'0416F204E3'}, 
-                {text:'0416F20F1F',value:'0416F20F1F'}, 
-                {text:'TU200005BB',value:'TU200005BB'}, 
-                {text:'0416F1CADD',value:'0416F1CADD'}, 
-                {text:'0416F1EF53',value:'0416F1EF53'}, 
-                {text:'0416F20B45',value:'0416F20B45'}, 
-                {text:'TU0000720', value:'TU0000720'}, 
-                {text:'TU0005CD', value:'TU0005CD'},
+              {text:'011016DF6B',value:'011016DF6B'}, 
+              {text:'01103F7ABF',value:'01103F7ABF'}, 
+              {text:'01103F4B9D',value:'01103F4B9D'}, 
+              {text:'01103F84DB',value:'01103F84DB'}, 
+              {text:'01103F6189',value:'01103F6189'},
             ],
             tag_reads_summary: {
-                "T1B": {"0416F1E5F8": 60, "0416F20B45": 15, "0416F208FC": 8},
-                "T2A": {"BFBFBFBFBF": 1, "0416F1DB87": 1, "0416F1D055": 5}, 
-                "T2B": {"0416F204E3": 61, "0416F20B45": 22, "0416F1E5F8": 48, "0416F1BAA0": 13, "0416F1CADD": 2, "BFBFBFBFBF": 1, "0416F1DB87": 1}, 
-                "T2C": {"0416F204E3": 556, "0416F208FC": 120, "0416F1EF53": 1, "0416F20B45": 12, "0416F20590": 1, "BFBFBFBFBF": 2, "0416F1DB87": 1},
-                "T1A": {"0416F20F1F": 16, "0416F1E5F8": 3, "0416F208FC": 7, "0416F1D055": 9, "BFBFBFBFBF": 5, "0416F1DB87": 1},
-                "TU109876": {"TU0000720": 16, "TU200005BB": 4, "TU0005CD": 8},
+                "35": {"01103F4B9D": 1, "01103F6189": 662, "011016DF6B": 287}, 
+                "14": {"01103F4B9D": 1}, 
+                "2": {"01103F4B9D": 1, "01103F84DB": 42, "01103F7ABF": 6},
             },
             //readers: readers_json.results,
             readers: [],
@@ -202,7 +189,7 @@ export default {
         this.locations = await this.fetchAll('/api/etag/locations/?page_size=100&format=json');
         this.reader_location = await this.fetchAll('/api/etag/reader_location/?page_size=100&format=json');
         this.tag_reads = await this.fetchAll('/api/etag/tag_reads/?page_size=1000&format=json',0);
-        this.animals = await this.fetchAll('/api/etag/animals/?page_size=100&format=json');
+        this.animals = await this.fetchAll('/api/etag/animals/?page_size=150&format=json');
         this.tag_animal = await this.fetchAll('/api/etag/tag_animal/?page_size=100&format=json');
     },
     computed: {
@@ -242,21 +229,6 @@ export default {
                     }
                 }
             }
-            // for demo purpose
-            // TU0000720 16 2 Purple Martin
-            // 0416F1D055 14 7 Purple Martin
-            // BFBFBFBFBF 9 17 Purple Martin
-            new_dict['TU0000720'] =[2,'Purple Martin'];
-            new_dict['0416F1D055'] =[7,'Purple Martin'];
-            new_dict['BFBFBFBFBF'] =[17,'Purple Martin'];
-            // TU0005CD 8 75 "Dark-eyed Junco
-            new_dict['TU0005CD'] =[75,'Dark-eyed Junco'];
-            // 0416F1DB87 4 1 Window Dove
-            new_dict['0416F1DB87'] =[1,'Window Dove'];
-            // TU200005BB 4 71 Northern Cardinal
-            new_dict['TU200005BB'] =[71,'Northern Cardinal'];
-            // 0416F20590 1 67 Downey Woodpecker
-            new_dict['0416F20590'] =[67,'Downey Woodpecker'];
             return new_dict;
         },
     },
@@ -276,7 +248,6 @@ export default {
             let axios = this.$axios;
             let results = [];
             let data = await axios.get(url.replace(process.env.baseUrl, "")).then(response => response.data);
-            console.log(loadallflag);
             if (loadallflag != 0) {
             while (data.next != null) {
                 results = [].concat.apply(results, data.results);
