@@ -54,8 +54,8 @@
 
                 <h6>Tag ID</h6>
                           <select  class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
-                    <option v-for="option in alltagid" v-bind:value="option.value">
-                        {{ option.text }}
+                    <option v-for="option in alltagid" v-bind:value="option">
+                        {{ option}}
                     </option>
                     </select>
                 <h6>Data Privacy</h6>
@@ -147,6 +147,7 @@ export default {
             date1_s: new Date('2012-01-01').getTime() / 1000,
             date_value:[new Date('2011-04-01').getTime() / 1000,new Date('2012-01-01').getTime() / 1000],
             dateformatter: v => new Date(v *1000).toISOString().split("T",1),
+
             allspecies:[
                 {text:'Carolina Chickadee',value:'0416F1BAA0,0416F20F1F,0416F1CADD,0416F1EF53,0416F20B45'},
                 {text:'Dark-eyed Junco',value:'TU0005CD'},
@@ -156,13 +157,7 @@ export default {
                 {text:'Tufted titmouse',value:'0416F1E5F8,0416F204E3,0416F208FC'},
                 {text:'Window Dove',value:'0416F1DB87'},
             ],
-            alltagid:[
-              {text:'011016DF6B',value:'011016DF6B'}, 
-              {text:'01103F7ABF',value:'01103F7ABF'}, 
-              {text:'01103F4B9D',value:'01103F4B9D'}, 
-              {text:'01103F84DB',value:'01103F84DB'}, 
-              {text:'01103F6189',value:'01103F6189'},
-            ],
+
             tag_reads_summary: {
                 "35": {"01103F4B9D": 1, "01103F6189": 662, "011016DF6B": 287}, 
                 "14": {"01103F4B9D": 1}, 
@@ -195,7 +190,9 @@ export default {
     computed: {
         map: function () {return this.$refs.map.mapObject},
         osm: function () {return this.$refs.osm.mapObject},
+
         reader_location_dict: function() {
+          // dict to store reader_id: lat, lon, startime, endtime
             var new_dict = {};
             var reader_id,location_id,r_lat,r_lon;
             var starttime, endtime;
@@ -216,7 +213,9 @@ export default {
             }
             return new_dict;
         },
+
         tag_animal_dict: function() {
+          // dict object to strore tag_id:animal_id, species
             var new_dict = {}
             var tag_id,animal_id,animal_name;
             for (var i=0; i<this.tag_animal.length;i++) {
@@ -230,6 +229,16 @@ export default {
                 }
             }
             return new_dict;
+        },
+
+        alltagid: function () {
+          // get tag id list for filter
+          // scan tag_reads to get all unique id
+          var alltagidset = new Set();
+          for (var i=0; i<this.tag_reads.length;i++) {
+            alltagidset.add(this.tag_reads[i]['tag_id']);
+          }
+          return alltagidset;
         },
     },
     methods: {
