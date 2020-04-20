@@ -2,7 +2,7 @@
   <div>
     <b-card bg-variant="light">
       <b-form-group>
-        <b-form @submit.prevent="saveChanges" v-model=form>
+        <b-form @submit.prevent="saveChanges" @load="$fetch" v-model=form>
 
           <b-form-group id="Title" :label="'Editing User ID: ' + item.user_id"></b-form-group>
           
@@ -20,10 +20,17 @@
             ></b-form-input>
           </b-form-group>
 
-          <b-form-group id="input-group-3" label=fetchLoc_id label-for="input-3">
+          <b-form-group id="input-group-3" label="Latitude" label-for="input-3">
             <b-form-input
-              id="input-2"
+              id="input-3"
               :value="coordinates.lat"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group id="input-group-4" label="Longitude" label-for="input-4">
+            <b-form-input
+              id="input-4"
+              :value="coordinates.lon"
             ></b-form-input>
           </b-form-group>
 
@@ -32,7 +39,6 @@
           
         </b-form>
       </b-form-group>
-      <b-button type="button" variant="primary" @click.prevent="fetchLoc_id">test</b-button>
     </b-card>
 
   </div>
@@ -40,17 +46,13 @@
 
 <script>
   export default {
-    async created() {
-      var self=this
-      let { reader_data } = this.$axios.get('/api/etag/reader_location/?reader_id=' + this.item.reader_id + '&format=json',{
-        headers: {Authorization: this.$auth.$storage._state['_token.local']}
-      }).then(function (reader_data, vm){
-        let { location_data } = self.$axios.get('/api/etag/locations/?location_id=' + reader_data.data.results[0].location_id + '&format=json'
-          ).then(function (location_data) {
-            this.coordinates.lat = location_data.data.results[0].latitude;
-            this.coordinates.lon = location_data.data.results[0].longitude;
-      })
-      });
+    data () {
+    return {
+      coordinates: {
+        lat: '',
+        lon: '',
+      }
+    }
     },
     computed: {
       item() {
@@ -59,11 +61,19 @@
       form: {
           Reader_ID: '',
           Description: '',
-      },
-      coordinates: {
-        lat: '',
-        lon: '',
       }
+    },
+    async fetch () {
+      var self=this
+      let { reader_data } = this.$axios.get('/api/etag/reader_location/?reader_id=' + this.item.reader_id + '&format=json',{
+        headers: {Authorization: this.$auth.$storage._state['_token.local']}
+      }).then(function (reader_data, vm){
+        let { location_data } = self.$axios.get('/api/etag/locations/?location_id=' + reader_data.data.results[0].location_id + '&format=json'
+          ).then(function (location_data) {
+            self.coordinates.lat = location_data.data.results[0].latitude;
+            self.coordinates.lon = location_data.data.results[0].longitude;
+      })
+      });
     },
     methods: {
       saveChanges(evt) {
