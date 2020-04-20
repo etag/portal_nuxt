@@ -201,7 +201,7 @@ export default {
         this.readers = await this.fetchAll('/api/etag/readers/?page_size=100&format=json');
         this.locations = await this.fetchAll('/api/etag/locations/?page_size=100&format=json');
         this.reader_location = await this.fetchAll('/api/etag/reader_location/?page_size=100&format=json');
-        this.tag_reads = await this.fetchAll('/api/etag/tag_reads/?page_size=1000&format=json');
+        this.tag_reads = await this.fetchAll('/api/etag/tag_reads/?page_size=1000&format=json',0);
         this.animals = await this.fetchAll('/api/etag/animals/?page_size=100&format=json');
         this.tag_animal = await this.fetchAll('/api/etag/tag_animal/?page_size=100&format=json');
     },
@@ -272,15 +272,17 @@ export default {
                 })
             }
         },
-        fetchAll: async function(url) {
+        fetchAll: async function(url,loadallflag=1) {
             let axios = this.$axios;
             let results = [];
             let data = await axios.get(url.replace(process.env.baseUrl, "")).then(response => response.data);
+            console.log(loadallflag);
+            if (loadallflag != 0) {
             while (data.next != null) {
                 results = [].concat.apply(results, data.results);
                 data = await axios.get(data.next.replace(process.env.baseUrl, "")).then(response => response.data);
                 await sleep(100)
-            }
+            }}
             return [].concat.apply(results, data.results);
         },
         
@@ -289,7 +291,8 @@ export default {
       this.clear_map();
       this.readers_marker.clearLayers();
       if (val == "readers") {
-        alert(this.readers);
+        //alert(this.readers);
+        //alert(this.reader_location_dict);
             var reader_id, reader_desc, reader_lat,reader_lon,reader_s_time,reader_e_time;
             var popinfo;
             for (var i=0; i<this.readers.length; i++) {
