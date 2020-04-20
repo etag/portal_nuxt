@@ -20,12 +20,18 @@
         </b-button>
       </template>
     </b-table>
-    <b-button @click="fetchFirst"><font-awesome-icon icon="backward" /></b-button>
-    <b-button @click="fetchPrev" :disabled="!prevUrl"><font-awesome-icon icon="angle-left" /></b-button>
-    page {{ page }} of {{ totalPages }}
-    <b-button @click="fetchNext" :disabled="!nextUrl"><font-awesome-icon icon="angle-right" /></b-button>
-    <b-button @click="fetchLast"><font-awesome-icon icon="forward" /></b-button>
-    <input v-model="gotoPage" placeholder="page #" style="max-width: 70px"><b-button @click="fetchPageByNumber">Go</b-button>
+
+    <b-container fluid="sm">
+      <b-button @click="fetchFirst"><font-awesome-icon icon="backward" /></b-button>
+      <b-button @click="fetchPrev" :disabled="!prevUrl"><font-awesome-icon icon="angle-left" /></b-button>
+      page {{ page }} of {{ totalPages }}
+      <b-button @click="fetchNext" :disabled="!nextUrl"><font-awesome-icon icon="angle-right" /></b-button>
+      <b-button @click="fetchLast"><font-awesome-icon icon="forward" /></b-button>
+      <input v-model="gotoPage" placeholder="page #" style="max-width: 70px"><b-button @click="fetchPageByNumber">Go</b-button>
+
+      <b-button type="button" @click="downloadTemplate"><font-awesome-icon icon="file-csv" /><span> Download Template </span></b-button>
+      <b-button type="button" @click="downloadData"><font-awesome-icon icon="cloud-download-alt" /><span> Download Data </span></b-button>
+    </b-container>
 
     <dropzone id="dzfile" ref="el"
       :options="options"
@@ -34,9 +40,6 @@
       @vdropzone-sending="sendingEvent"
       @vdropzone-success="successEvent"
     />
-
-    <b-button type="button" @click="downloadTemplate"><font-awesome-icon icon="file-csv" /><span> Download Template </span></b-button>
-    <b-button type="button" @click="downloadData"><font-awesome-icon icon="cloud-download-alt" /><span> Download Data </span></b-button>
 
   </div>
 </template>
