@@ -66,11 +66,10 @@
                 <br><h6>Date</h6>
                 <!-- <div><h6>Date range: {{ date_value}}</h6></div> -->
                 <div align="center" display="block" style="width:85%;margin-left: 5%;">
-                <vue-slider v-model="date_value" :min=date0_s :max=date1_s :interval=86400 :enable-cross="false"  :tooltip="'always'" :tooltip-placement="['bottom', 'bottom']" :tooltip-formatter="dateformatter"></vue-slider>
+                <vue-slider ref=dateslider :value="daterange" :min=date0_s :max=date1_s :interval=86400 :enable-cross="false"  :tooltip="'always'" :tooltip-placement="['bottom', 'bottom']" :tooltip-formatter="dateformatter"></vue-slider>
                 </div>
-                
-                  <br><div class="mt-3">Selected: <strong>{{ selected }}</strong></div></br>
-                <br/><br/>
+                <br/>
+                <br/>
                 <button type="button" class="btn btn-primary btn-sm btn-block" @click="apply_filters"><strong>Apply Filters</strong></button>  
 
 
@@ -142,9 +141,9 @@ export default {
             selected: [],
             datatype_sel: '',
             opt_displaytype: '',
-            date0_s: new Date('2011-04-01').getTime() / 1000,
-            date1_s: new Date('2012-01-01').getTime() / 1000,
-            date_value:[new Date('2011-04-01').getTime() / 1000,new Date('2012-01-01').getTime() / 1000],
+            //date0_s: new Date('2011-04-01').getTime() / 1000,
+            //date1_s: new Date('2012-01-01').getTime() / 1000,
+            //date_value:[new Date('2011-04-01').getTime() / 1000,new Date('2012-01-01').getTime() / 1000],
             dateformatter: v => new Date(v *1000).toISOString().split("T",1),
 
             tag_reads_summary: {
@@ -169,13 +168,14 @@ export default {
         }
     },
     async fetch () {
+        this.tag_reads = await this.fetchAll('/api/etag/tag_reads/?page_size=1000&format=json',0);
         this.readers = await this.fetchAll('/api/etag/readers/?page_size=100&format=json');
         this.locations = await this.fetchAll('/api/etag/locations/?page_size=100&format=json');
         this.reader_location = await this.fetchAll('/api/etag/reader_location/?page_size=100&format=json');
-        this.tag_reads = await this.fetchAll('/api/etag/tag_reads/?page_size=1000&format=json',0);
         this.animals = await this.fetchAll('/api/etag/animals/?page_size=150&format=json');
         this.tag_animal = await this.fetchAll('/api/etag/tag_animal/?page_size=100&format=json');
     },
+
     computed: {
         map: function () {return this.$refs.map.mapObject},
         osm: function () {return this.$refs.osm.mapObject},
@@ -202,7 +202,7 @@ export default {
             }
             return new_dict;
         },
-
+      
         tag_animal_dict: function() {
           // dict object to strore tag_id:animal_id, species
             var new_dict = {}
@@ -244,7 +244,28 @@ export default {
           }
           return alltagidset;
         },
+       
+        daterange: function () {
+          // find out the date range from tag_reads
+          var alldateset = new Set();
+          console.log(this.tag_reads.length);
+          for (var i=0; i<this.tag_reads.length;i++) {
+            alldateset.add(this.tag_reads[i]['tag_read_time'].split("T")[0]);
+          }
+          var alldatearray = Array.from(alldateset);
+          console.log(alldatearray);
+          var dateinsecond = [];
+          for (var i=0; i<alldatearray.length;i++) {
+            dateinsecond.push(new Date(alldatearray[i]).getTime() / 1000);
+          }
+          dateinsecond.sort(function(a, b){return a-b});
+          console.log(dateinsecond);
+          return [dateinsecond[0],dateinsecond.slice(-1)[0]];
+        }, 
+        date0_s:function() {return this.daterange[0];},
+        date1_s:function() {return this.daterange[1];},      
     },
+
     methods: {
         initMap: function() {
             //var map =  this.$refs.map.mapObject;
@@ -425,7 +446,9 @@ export default {
                       popinfo += '<strong>Animal Species: </strong>' + animal_species + "<br>";
                     } 
                     //[reader_lat, reader_lon,reader_s_time,reader_e_time]= extract_reader_location(reader_id);
-                    [reader_lat, reader_lon,reader_s_time,reader_e_time]= this.reader_location_dict[reader_id]; 
+                    if (reader_id in this.reader_location_dict) {
+                      [reader_lat, reader_lon,reader_s_time,reader_e_time]= this.reader_location_dict[reader_id]; 
+                    } else {continue};
                     popinfo += "<strong>Reader ID</strong>: " + this.tag_reads[i]['reader_id']+ "<br>";
                     popinfo += "<strong>Read Time</strong>: " + this.tag_reads[i]['tag_read_time']+ "<br>";
                     popinfo += "<strong>Public</strong>: " + this.tag_reads[i]['public'] + "<br>";
@@ -476,8 +499,9 @@ export default {
         //alert(tag_filter_list);  
         //date filter
         var date_filter = [];
-        var date0 = this.date_value[0];
-        var date1 = this.date_value[1];
+        //console.log(this.$refs.dateslider.value);
+        var date0 = this.$refs.dateslider.value[0];
+        var date1 = this.$refs.dateslider.value[1];
         if (date0 != this.date0_s || date1 != this.date1_s) {
           date_filter.push(date0,date1);}
           // else { alert("not time fileter");}
