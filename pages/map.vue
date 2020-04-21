@@ -146,11 +146,11 @@ export default {
             //date_value:[new Date('2011-04-01').getTime() / 1000,new Date('2012-01-01').getTime() / 1000],
             dateformatter: v => new Date(v *1000).toISOString().split("T",1),
 
-            tag_reads_summary: {
-                "35": {"01103F4B9D": 1, "01103F6189": 662, "011016DF6B": 287}, 
-                "14": {"01103F4B9D": 1}, 
-                "2": {"01103F4B9D": 1, "01103F84DB": 42, "01103F7ABF": 6},
-            },
+            // tag_reads_summary: {
+            //     "35": {"01103F4B9D": 1, "01103F6189": 662, "011016DF6B": 287}, 
+            //     "14": {"01103F4B9D": 1}, 
+            //     "2": {"01103F4B9D": 1, "01103F84DB": 42, "01103F7ABF": 6},
+            // },
             //readers: readers_json.results,
             readers: [],
             //locations: locations_json.results,
@@ -245,6 +245,31 @@ export default {
           return alltagidset;
         },
        
+       tag_reads_summary: function () {
+         // a summary dict on tag reads on each reader
+         // reader_id: tag_id:times, tag_id:times
+         var new_dict = {};
+         var temp_dict = {};
+         var readerid, tagid;
+         for (var i=0; i<this.tag_reads.length;i++) {
+           tagid = this.tag_reads[i]['tag_id'];
+           readerid = this.tag_reads[i]['reader_id'];
+           if (new_dict.hasOwnProperty(readerid)) {
+             temp_dict = {};
+             temp_dict = new_dict[readerid]
+             if (temp_dict.hasOwnProperty(tagid)) {
+                temp_dict[tagid] = temp_dict[tagid] + 1
+             } else { temp_dict[tagid] = 1; }
+             new_dict[readerid] = temp_dict;
+           } else {
+             temp_dict={};
+             temp_dict[tagid] = 1
+             new_dict[readerid] = temp_dict;
+           }}
+           console.log(new_dict);
+           return new_dict;
+       },
+
         daterange: function () {
           // find out the date range from tag_reads
           var alldateset = new Set();
@@ -320,6 +345,7 @@ export default {
       }
       //display tags
       if (val == "tags") {
+        alert(this.tag_reads_summary);
         //set the as summaries if is not selected
       //alert(this.tag_animal_dict['0416F20F1F']);
         var optionValue = $("input[name='opt_displaytype']:checked").val();
