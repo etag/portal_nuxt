@@ -168,10 +168,10 @@ export default {
         }
     },
     async fetch () {
-        this.tag_reads = await this.fetchAll('/api/etag/tag_reads/?page_size=1000&format=json',0);
         this.readers = await this.fetchAll('/api/etag/readers/?page_size=100&format=json');
         this.locations = await this.fetchAll('/api/etag/locations/?page_size=100&format=json');
         this.reader_location = await this.fetchAll('/api/etag/reader_location/?page_size=100&format=json');
+        this.tag_reads = await this.fetchAll('/api/etag/tag_reads/?page_size=1000&format=json',0);
         this.animals = await this.fetchAll('/api/etag/animals/?page_size=150&format=json');
         this.tag_animal = await this.fetchAll('/api/etag/tag_animal/?page_size=100&format=json');
     },
@@ -345,7 +345,7 @@ export default {
       }
       //display tags
       if (val == "tags") {
-        alert(this.tag_reads_summary);
+        //alert(this.tag_reads_summary);
         //set the as summaries if is not selected
       //alert(this.tag_animal_dict['0416F20F1F']);
         var optionValue = $("input[name='opt_displaytype']:checked").val();
