@@ -9,14 +9,14 @@ export const state = () => ({
 })
 
 export const mutations = {
-  add (state, reader) {
-    state.list.push(reader)
+  add (state, animal) {
+    state.list.push(animal)
   },
-  appendList(state, readers) {
-    state.list = [].concat.apply(state.list, readers)
+  appendList(state, animals) {
+    state.list = [].concat.apply(state.list, animals)
   },
-  setList(state, readers) {
-    state.list = readers
+  setList(state, animals) {
+    state.list = animals
   },
   setActiveItem(state, item) {
     state.activeItem = item
@@ -36,7 +36,7 @@ export const mutations = {
   setNext(state, next) {
     state.next = next
   },
-  remove (state, { reader }) {
-    state.list.splice(state.list.indexOf(reader), 1)
+  remove (state, { animal }) {
+    state.list.splice(state.list.indexOf(animal), 1)
   }
 }

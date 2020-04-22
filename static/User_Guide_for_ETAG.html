@@ -1,0 +1,305 @@
+
+    <html>
+      <head>
+        <title>Etags</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+      </head>
+      <body>
+        <div id='content'>
+<h1 class="code-line" data-line-start=0 data-line-end=1 ><a id="User_guide_to_Electronic_Transponder_Analysis_Gateway_0"></a>User guide to Electronic Transponder Analysis Gateway</h1>
+<h2 class="code-line" data-line-start=2 data-line-end=3 ><a id="Last_updated_20_April_2020_2"></a>Last updated 20 April 2020</h2>
+<p class="has-line-data" data-line-start="3" data-line-end="4">For assistance or bug reports, please contact <a href="mailto:cmcurry@ou.edu">Claire Curry</a>, or submit an issue on our <a href="https://github.com/etag" target="_blank">repositories</a> for the <a href="https://github.com/etag/portal_nuxt" target="_blank">visualizations and web portal</a>, <a href="https://github.com/etag/etagq" target="_blank">data import</a>, or <a href="https://github.com/etag/etag-api" target="_blank">interacting with the API</a>.</p>
+<h1 class="code-line" data-line-start=5 data-line-end=6 ><a id="Quick_start_guide_How_do_I_use_the_ETAG_website_5"></a>Quick start guide: How do I use the ETAG website?</h1>
+<ol>
+<li class="has-line-data" data-line-start="7" data-line-end="8">Visit <a href="https://head.ouetag.org" target="_blank">ETAG</a>.</li>
+<li class="has-line-data" data-line-start="8" data-line-end="9">FIXME: Get a username and password if you don’t have one.</li>
+<li class="has-line-data" data-line-start="9" data-line-end="10">Log in with your username and password.</li>
+<li class="has-line-data" data-line-start="10" data-line-end="15">Format the following three files types following these templates and examples.  Your files need to have (at minimum) exactly the same column headers and be in .csv format as each example file.  Extra columns are acceptable in Tagged Data and RFID Reads and will be kept as “field data” or “accessory data”.  <a href="https://github.com/etag/user_documentation/blob/master/User_Guide_for_ETAG.md#required-fields" target="_blank">See formatting</a>, for details on what the fields/columns represent and how they must be formatted.  It is easiest to paste your data into the template in a spreadsheet program such as Microsoft Excel or LibreOffice Calculate.
+<ul>
+<li class="has-line-data" data-line-start="11" data-line-end="14">Upload first (any order)
+<ul>
+<li class="has-line-data" data-line-start="12" data-line-end="13">Tagged Data: <a href="https://osf.io/jzf3b/" target="_blank">template</a>,  <a href="https://osf.io/4m8k2/" target="_blank">example 1</a>, <a href="https://osf.io/hkmce/" target="_blank">example 2</a></li>
+<li class="has-line-data" data-line-start="13" data-line-end="14">Reader Data: <a href="https://osf.io/fv5cw/" target="_blank">template</a>,   <a href="https://osf.io/wgbty/" target="_blank">example</a></li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="14" data-line-end="15">Upload last: RFID Reads: <a href="https://osf.io/mxtue/" target="_blank">template</a>, <a href="https://osf.io/t4by2/" target="_blank">example 1</a>, <a href="https://osf.io/t53jf/" target="_blank">example 2</a></li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="15" data-line-end="16"><a href="https://github.com/etag/user_documentation/blob/master/User_Guide_for_ETAG.md#upload-files" target="_blank">Upload each file</a>.</li>
+<li class="has-line-data" data-line-start="16" data-line-end="17">View each data type (<a href="https://head.ouetag.org/readerdata" target="_blank">Reader Data</a>, <a href="https://head.ouetag.org/rfidreads" target="_blank">RFID Reads</a>, <a href="https://head.ouetag.org/taggeddata" target="_blank">Tagged Data</a>) in tabular format and edit your data(FIXME) as needed.</li>
+<li class="has-line-data" data-line-start="17" data-line-end="18"><a href="https://head.ouetag.org/map" target="_blank">View your data on the map</a> if readers have GPS points.  <a href="https://github.com/etag/user_documentation/blob/master/User_Guide_for_ETAG.md#visualize-data" target="_blank">Multiple visualizations</a> are available.</li>
+<li class="has-line-data" data-line-start="18" data-line-end="19">Use your data via <a href="https://docs.google.com/document/d/1gWJlPUpfzh5vDinRFyxtkYlA4elWybNfmVASIK7C4wY/edit?usp=sharing" target="_blank">API calls</a>.</li>
+<li class="has-line-data" data-line-start="19" data-line-end="20">Export your data via <a href="https://github.com/etag/user_documentation/blob/master/User_Guide_for_ETAG.md#downloading-your-data" target="_blank">.csv downloads</a>.</li>
+<li class="has-line-data" data-line-start="20" data-line-end="22">Have a question about the details of ETAG functionality?  Read the <a href="https://github.com/etag/user_documentation/blob/master/User_Guide_for_ETAG.md#in-depth-documentation" target="_blank">In depth documentation</a> or contact our <a href="https://osf.io/zbd63/wiki/" target="_blank">help wiki</a> (Claire and Eli are notified when changes or comments are made).</li>
+</ol>
+<h1 class="code-line" data-line-start=22 data-line-end=23 ><a id="In_depth_documentation_22"></a>In depth documentation</h1>
+<h1 class="code-line" data-line-start=23 data-line-end=24 ><a id="What_is_ETAG_23"></a>What is ETAG?</h1>
+<p class="has-line-data" data-line-start="24" data-line-end="25">The Electronic Transponder Analysis Gateway (ETAG) is a database and software system to provide professional data management and versatile data dissemination to the growing community of researchers who use Radio Frequency Identification (RFID) technology to advance biological inquiries in fields like animal behavior, ecological physiology, and community ecology. ETAG is an infrastructure based on open-source tools, allowing scientists to collect, validate, visualize, analyze, and share data in near real-time. ETAG facilitates new capacities both for producing novel science and for sharing data with fellow researchers and the general public. Our system will free up time from the management of data collection, analysis, and curation (currently done by hand), leaving researchers with more time for science.</p>
+<h1 class="code-line" data-line-start=26 data-line-end=27 ><a id="What_is_RFID_26"></a>What is RFID?</h1>
+<p class="has-line-data" data-line-start="27" data-line-end="28">RFID is a mature and ubiquitous technology, familiar to people in the form of electronic tool-booths or as ‘microchip’ tags implanted in cats and dogs. RFID entails short-range wireless communication between small transponder tags and readers, and it can facilitate tracking of individual items or animals that are equipped with a tag. A community of researchers has emerged that employs RFID to track individual birds, mammals, fish, reptiles, and even insects in a wide range of field and laboratory research endeavors.</p>
+<h1 class="code-line" data-line-start=29 data-line-end=30 ><a id="Who_should_use_ETAG_29"></a>Who should use ETAG?</h1>
+<p class="has-line-data" data-line-start="30" data-line-end="31">You should use ETAG if you have RFID reads with associated data on the tagged organisms and the reader locations.  Our system requires three types of files: animal metadata, reader metadata, and tag reads.</p>
+<h1 class="code-line" data-line-start=32 data-line-end=33 ><a id="Why_should_I_use_ETAG_instead_of_my_own_personal_data_management_system_32"></a>Why should I use ETAG instead of my own personal data management system?</h1>
+<ul>
+<li class="has-line-data" data-line-start="33" data-line-end="34">Using ETAG’s already designed, standardized database will save you time on managing your own database.</li>
+<li class="has-line-data" data-line-start="34" data-line-end="35">ETAG provides several visualizations that can be accessed via API for your lab website or outreach.</li>
+<li class="has-line-data" data-line-start="35" data-line-end="36">Data from all of your studies can be pulled from the database at once with API calls in R or Python.</li>
+<li class="has-line-data" data-line-start="36" data-line-end="38">Data can be public OR private, allowing you to share data when you’re ready.</li>
+</ul>
+<h2 class="code-line" data-line-start=38 data-line-end=39 ><a id="Create_an_account_FIXME_38"></a>Create an account (FIXME)</h2>
+<h2 class="code-line" data-line-start=40 data-line-end=41 ><a id="Upload_files_40"></a>Upload files</h2>
+<p class="has-line-data" data-line-start="41" data-line-end="42">Three comma-separated text files (.csv) are required by ETAG for upload.  ETAG understands (parses) data from certain fields to populate the database.</p>
+<ul>
+<li class="has-line-data" data-line-start="43" data-line-end="44">Tagged Data</li>
+<li class="has-line-data" data-line-start="44" data-line-end="45">Reader Data</li>
+<li class="has-line-data" data-line-start="45" data-line-end="46">RFID Reads (needs previous two files uploaded first)</li>
+</ul>
+<p class="has-line-data" data-line-start="48" data-line-end="49">You can upload these data files to ETAG manually (all three) or automatically (RFID Reads only).  Once you have Tagged Data and Reader Locations, you can upload the updated RFID Reads file or additional non-overlapping RFID Reads files as you get more reads.  We will use these filenames, but the filenames are not standardized in the system.  Files are deleted from the server after being put into the database, so your data exists, but only in the database.</p>
+<h3 class="code-line" data-line-start=50 data-line-end=51 ><a id="Required_fields_50"></a>Required fields</h3>
+<p class="has-line-data" data-line-start="51" data-line-end="52">Required fields are shown when you download the template from ETAG.  Your fields (columns) must have names exactly matching the template’s required fields, including capitalization and punctuation such as underscores.  All extra columns in Tagged Data and Reader Data will be put in JSON fields that store data in a single, queryable column per table (for Tagged Data: “Field Data” and Reader Data: “Accessory Data”).  These extra columns are where you will put data such as animal measurements or sensor data accompanying tag reads.</p>
+<h3 class="code-line" data-line-start=53 data-line-end=54 ><a id="Manually_53"></a>Manually</h3>
+<p class="has-line-data" data-line-start="54" data-line-end="55">Use named tabs to load any of the three files manually.  Tagged Data and Reader Data can only be uploaded manually and must be uploaded before RFID Reads.  If you have uploaded previous Tagged Data or Reader Data, then you can upload new RFID Reads without repeating that step for the same study.</p>
+<h4 class="code-line" data-line-start=56 data-line-end=57 ><a id="Tagged_Data_56"></a>Tagged Data</h4>
+<h5 class="code-line" data-line-start=57 data-line-end=58 ><a id="Upload_57"></a>Upload</h5>
+<p class="has-line-data" data-line-start="58" data-line-end="59">When you upload your Tagged Data file, the code checks a list of the user’s existing owned tag IDs versus the tag IDs in your .csv file.</p>
+<p class="has-line-data" data-line-start="60" data-line-end="61">If the tag ID doesn’t exist, ETAG adds the tag ID to the database.  If the tag exists but you (the user) don’t “own” it, you cannot update the data for that tag ID. This would happen if someone else has already uploaded that tag ID (perhaps someone else in your research group, or another research group if you detected their animal). The API currently gives an error (FIXME: Tyler will add what the message is) but not the user interface (UI), so for you as an end user it will simply not upload.  The remainder of your .csv file will upload normally.</p>
+<h5 class="code-line" data-line-start=62 data-line-end=63 ><a id="Correcting_and_appending_records_62"></a>Correcting and appending records</h5>
+<p class="has-line-data" data-line-start="63" data-line-end="64">If the tag ID matches one of your owned tags in the database, ETAG will check all other fields for your Tagged Data file.  If there are differences, ETAG will UPDATE BY OVERWRITING individual tag records.  If you upload a file where you have deleted a record, ETAG will not remove that record from the database - you must delete it manually through the ETAG editing interface.  (ETAG is not comparing the csv files to each other, but matching records from your csv to data that has already been processed into the database.)</p>
+<p class="has-line-data" data-line-start="65" data-line-end="66">If there are multiple rows in your Tagged Data file that have identical tag IDs (i.e., you have multiple records or measurements for one individual), ETAG will update the field data (FIXME: in progress for implementation).</p>
+<p class="has-line-data" data-line-start="67" data-line-end="68">These two behaviors provide a method to correct data via uploads.  You can also use the UI to correct them manually, as for deletions.</p>
+<p class="has-line-data" data-line-start="69" data-line-end="70">If you want to append data, you MUST upload all previous records plus your appended items. You can export your existing records if you have misplaced your local files using the blue “Download data” button below your records.  Use that as a template to upload the corrected (in this case, appended) records for the tag ID (i.e. for the tagged animal/item).</p>
+<h4 class="code-line" data-line-start=71 data-line-end=72 ><a id="Reader_Data_71"></a>Reader Data</h4>
+<p class="has-line-data" data-line-start="72" data-line-end="73">Reader Data does not require a GPS point, but RFID Reads will only be available for visualization if GPS points are provided.  The tag ID is the RFID tag identifying number.  The UUID is the reader identifying number (i.e., the reader’s “name”).  If you don’t have a reader UUID, we recommend using your username (which is required to be unique) and adding sequential numbers after it for each reader.  Start and end date columns allow for you to use the same reader for different projects by specifying when the reader should be associated with which RFID read data.</p>
+<h4 class="code-line" data-line-start=75 data-line-end=76 ><a id="Tag_reads_75"></a>Tag reads</h4>
+<p class="has-line-data" data-line-start="76" data-line-end="77">Tag reads from 2019 or later Bridge Lab ETAG readers should conform to the ETAG database formatting standards and need no modification.  Output files from older Bridge lab or third-party readers likely will not conform to the ETAG database upload standards.  Please compare your files to the template files or to your exported files, make appropriate formatting changes to a copy of your original data, and upload the revised copies.</p>
+<p class="has-line-data" data-line-start="78" data-line-end="79">Time stamps must be in the formats described in the database documentation section <a href="https://www.postgresql.org/docs/9.3/datatype-datetime.html#DATATYPE-TIMESTAMPS" target="_blank">8.5.1.3. Time Stamps</a></p>
+<p class="has-line-data" data-line-start="80" data-line-end="81">If you make changes to your tag reads file in Excel, beware Excel’s automatic csv import.  Manually set Excel to import everything as text.  Otherwise, Excel will change the date formatting or drop leading zeroes from RFID tag numbers.  An alternative is using R to add a column with the reader UUID (reader name).</p>
+<h3 class="code-line" data-line-start=82 data-line-end=83 ><a id="Automatically_82"></a>Automatically</h3>
+<p class="has-line-data" data-line-start="83" data-line-end="84">You can upload RFID Reads automatically to the ETAG portal using the API and your authentication token.  Duplicates should not occur because loading occurs real-time.  Tagged Data and Reader Data files must be uploaded manually before you allow RFID Reads to attempt loading.  This feature is in development and not currently available.</p>
+<h4 class="code-line" data-line-start=85 data-line-end=86 ><a id="Wired_connection_85"></a>Wired connection</h4>
+<p class="has-line-data" data-line-start="86" data-line-end="87">In development.</p>
+<h4 class="code-line" data-line-start=88 data-line-end=89 ><a id="Wireless_connection_88"></a>Wireless connection</h4>
+<p class="has-line-data" data-line-start="89" data-line-end="90"><a href="https://osf.io/5dh3q/" target="_blank">In development</a></p>
+<h2 class="code-line" data-line-start=91 data-line-end=92 ><a id="Exports_downloads_and_backups_91"></a>Exports, downloads, and backups</h2>
+<p class="has-line-data" data-line-start="92" data-line-end="93">You will likely want to download your data to use in local analyses or as a backup.  Here we describe how you can download your data and how we backup your data in the cloud and physically at the University of Oklahoma.</p>
+<h3 class="code-line" data-line-start=94 data-line-end=95 ><a id="Downloading_your_data_94"></a>Downloading your data</h3>
+<p class="has-line-data" data-line-start="95" data-line-end="96">You can export and download your data as three .csv files (RFID Reads, Tagged Data, and Reader Data) from each tab (Reader Data, RFID Reads, and Tagged Data, respectively) by clicking on the “Download Data” button (bottom right).</p>
+<h3 class="code-line" data-line-start=97 data-line-end=98 ><a id="ETAG_automated_backups_97"></a>ETAG automated backups</h3>
+<p class="has-line-data" data-line-start="98" data-line-end="99">The primary ETAG repository resides within Amazon Web Services (AWS) Relational Database Services (RDS).  The ETAG system will maintain an off-site backup copy of all data through daily backups with AWS Simple Storage Service (S3), which roll-over every seven (7) days (i.e., only the last seven days are kept).</p>
+<p class="has-line-data" data-line-start="100" data-line-end="101">ETAG will generate two tape copies of all data on a monthly basis within the University of Oklahoma (OU) OURRstore (FIXME: needs implementation).</p>
+<p class="has-line-data" data-line-start="102" data-line-end="103">With three storage locations (main on AWS RDS, daily rolling backups on AWS S3, and monthly static and permanent on the OU OURRstore tape system), even a simultaneous and catastrophic failure in 2/3 of facilities will not result in the loss of ETAG data.  Hopefully, most users will also keep local copies of their data for 4 locations for any given dataset.</p>
+<h2 class="code-line" data-line-start=104 data-line-end=105 ><a id="Visualize_data_104"></a>Visualize data</h2>
+<p class="has-line-data" data-line-start="105" data-line-end="106">The ETAG portal currently offers two data types, two options for tag read displays, and four filters.</p>
+<ul>
+<li class="has-line-data" data-line-start="106" data-line-end="109">Data types
+<ul>
+<li class="has-line-data" data-line-start="107" data-line-end="108">Readers</li>
+<li class="has-line-data" data-line-start="108" data-line-end="109">Tag reads</li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="109" data-line-end="112">Tag reads display options
+<ul>
+<li class="has-line-data" data-line-start="110" data-line-end="111">Summaries (count per location)</li>
+<li class="has-line-data" data-line-start="111" data-line-end="112">Raw tag reads Individual reads</li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="112" data-line-end="118">Filter by
+<ul>
+<li class="has-line-data" data-line-start="113" data-line-end="114">Species</li>
+<li class="has-line-data" data-line-start="114" data-line-end="115">RFID tag ID</li>
+<li class="has-line-data" data-line-start="115" data-line-end="116">Data privacy (all public data or only your data)</li>
+<li class="has-line-data" data-line-start="116" data-line-end="118">Date minimum and maximum</li>
+</ul>
+</li>
+</ul>
+<p class="has-line-data" data-line-start="118" data-line-end="119">You can feature visualizations on your own website by pulling from the ETAG API.  For example, <a href="https://osf.io/qe53h/" target="_blank">sample R code to call from the API</a> could be used in combination with an <a href="https://shiny.rstudio.com/" target="_blank">RShiny site</a>.  We encourage sharing and welcome contributions via pull requests or issues to our <a href="https://osf.io/8gwjz/" target="_blank">in development visualization code</a>.</p>
+<h2 class="code-line" data-line-start=120 data-line-end=121 ><a id="Design_a_RFID_antenna_FIXME_in_progress_120"></a>Design a RFID antenna (FIXME: in progress)</h2>
+<p class="has-line-data" data-line-start="121" data-line-end="122">The “Antenna” tab allows you to input parameters and see the resulting RFID antenna.  Please contact Dr. J. Ruyle (<a href="mailto:ruyle@ou.edu">ruyle@ou.edu</a>) or Dr. E. Bridge (<a href="mailto:ebridge@ou.edu">ebridge@ou.edu</a>) if you have questions about antenna design.  Please add an issue to portal_nuxt regarding <a href="https://github.com/etag/portal_nuxt/blob/test/pages/antenna.vue" target="_blank">this page</a> if you have suggested modifications to the antenna visualization.</p>
+        </div>
+        <style type='text/css'>body {
+  font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #111;
+  background-color: #fdfdfd;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  -moz-font-feature-settings: "kern" 1;
+  -o-font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+  padding: 30px;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    padding: 5px;
+  }
+
+  body > #content {
+    padding: 0px 20px 20px 20px !important;
+  }
+}
+
+body > #content {
+  margin: 0px;
+  max-width: 900px;
+  border: 1px solid #e1e4e8;
+  padding: 10px 40px;
+  padding-bottom: 20px;
+  border-radius: 2px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+hr {
+  color: #bbb;
+  background-color: #bbb;
+  height: 1px;
+  flex: 0 1 auto;
+  margin: 1em 0;
+  padding: 0;
+  border: none;
+}
+
+/**
+ * Links
+ */
+a {
+  color: #0366d6;
+  text-decoration: none; }
+  a:visited {
+    color: #0366d6; }
+  a:hover {
+    color: #0366d6;
+    text-decoration: underline; }
+
+pre {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
+}
+
+/**
+  * Code blocks
+  */
+
+code {
+  background-color: rgba(27,31,35,.05);
+  border-radius: 3px;
+  font-size: 85%;
+  margin: 0;
+  word-wrap: break-word;
+  padding: .2em .4em;
+  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+}
+
+pre > code {
+  background-color: transparent;
+  border: 0;
+  display: inline;
+  line-height: inherit;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  word-wrap: normal;
+  font-size: 100%;
+}
+
+
+/**
+ * Blockquotes
+ */
+blockquote {
+  margin-left: 30px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+  border-left-width: 3px;
+  padding: 0 1em;
+  color: #828282;
+  border-left: 4px solid #e8e8e8;
+  padding-left: 15px;
+  font-size: 18px;
+  letter-spacing: -1px;
+  font-style: italic;
+}
+blockquote * {
+  font-style: normal !important;
+  letter-spacing: 0;
+  color: #6a737d !important;
+}
+
+/**
+ * Tables
+ */
+table {
+  border-spacing: 2px;
+  display: block;
+  font-size: 14px;
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 16px;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+th {
+  font-weight: 600;
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+/**
+ * Others
+ */
+
+img {
+  max-width: 100%;
+}
+
+p {
+  line-height: 24px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #24292e; }
+
+ul {
+  margin-top: 0; }
+
+li {
+  color: #24292e;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5; }
+
+li + li {
+  margin-top: 0.25em; }
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: #24292e; }
+
+a:visited {
+  color: #0366d6; }
+
+h2, h3, h4 {
+  border-bottom: 1px solid #eaecef;
+  color: #111;
+  /* Darker */ }</style>
+      </body>
+    </html>
