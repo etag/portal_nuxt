@@ -2,7 +2,7 @@
   <div>
     <b-card bg-variant="light">
       <b-form-group>
-        <b-form @submit="saveChanges" v-model=form>
+        <b-form @submit.prevent="saveChanges" v-model=form>
 
           <b-form-group id="Title" :label="'Editing Animal ID: ' + item.animal_id"></b-form-group>
           
@@ -36,7 +36,7 @@
   export default {
     data() {
       return {
-        item: this.$store.state.animals.activeItem,
+        item: {},
         form: {
           SPECIES: '',
           ANIMAL_CURRENTMARKER: '',
@@ -45,17 +45,20 @@
         }
       }
     },
+    mounted() {
+      this.item = this.$store.state.animals.activeItem;
+    },
     methods: {
-      saveChanges(evt) {
-        evt.preventDefault()
+      saveChanges() {
         // TODO: add axios patch to submit edits
+        console.log(this.item)
         this.$axios({
           url: this.item.url,
           method: 'patch',
-          data: this.$item,
+          data: this.item,
           headers: {Authorization: this.$auth.$storage._state['_token.local']}
         }).then(function (response) {
-            //this.$router.push('taggeddata')
+            //this.$router.push('/taggeddata')
             console.log(response);
         })
         .catch(function (response) {

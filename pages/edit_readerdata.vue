@@ -85,7 +85,7 @@
           data: this.$item,
           headers: {Authorization: this.$auth.$storage._state['_token.local']}
         }).then(function (response) {
-            //this.$router.push('taggeddata')
+            //this.$router.push('/readerdata')
             console.log(response);
         })
         .catch(function (response) {

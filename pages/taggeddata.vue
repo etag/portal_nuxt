@@ -123,48 +123,48 @@ export default {
   },
   methods: {
     async fetchPage(url) {
-      let { data } = await this.$axios.get(url.replace(this.baseUrl, ""))
-      this.$store.commit('animals/setList', data.results)
+      let { data } = await this.$axios.get(url.replace(this.baseUrl, ""));
+      this.$store.commit('animals/setList', data.results);
       // regex lookbehind is not supported in several browsers - https://caniuse.com/#feat=js-regexp-lookbehind
       // this.$store.commit('animals/setPage', parseInt(url.match(/(?<=page=)[0-9]+/g)))  // extract page number from url
-      this.$store.commit('animals/setPage', parseInt(url.match(/page=[0-9]+/g)[0].replace('page=','')))
-      this.$store.commit('animals/setPrev', data.previous)
-      this.$store.commit('animals/setNext', data.next)
+      this.$store.commit('animals/setPage', parseInt(url.match(/page=[0-9]+/g)[0].replace('page=','')));
+      this.$store.commit('animals/setPrev', data.previous);
+      this.$store.commit('animals/setNext', data.next);
     },
     fetchFirst() {
-      this.gotoPage = 1
-      this.fetchPageByNumber()
+      this.gotoPage = 1;
+      this.fetchPageByNumber();
     },
     fetchLast() {
-      this.gotoPage = this.totalPages
-      this.fetchPageByNumber()
+      this.gotoPage = this.totalPages;
+      this.fetchPageByNumber();
     },
     fetchNext() {
-      this.fetchPage(this.nextUrl)
+      this.fetchPage(this.nextUrl);
     },
     fetchPrev() {
-      this.fetchPage(this.prevUrl)
+      this.fetchPage(this.prevUrl);
     },
     async fetchPageByNumber() {
       let { data } = await this.$axios.get('/api/etag/animals/' +
         '?page=' + this.gotoPage +
         '&page_size=' + this.$store.state.animals.pageSize +
         '&format=json'
-      )
-      this.$store.commit('animals/setList', data.results)
-      this.$store.commit('animals/setCount', data.count)
-      this.$store.commit('animals/setPage', this.gotoPage)
-      this.$store.commit('animals/setPrev', data.previous)
-      this.$store.commit('animals/setNext', data.next)
-      this.gotoPage = null  // clear
+      );
+      this.$store.commit('animals/setList', data.results);
+      this.$store.commit('animals/setCount', data.count);
+      this.$store.commit('animals/setPage', this.gotoPage);
+      this.$store.commit('animals/setPrev', data.previous);
+      this.$store.commit('animals/setNext', data.next);
+      this.gotoPage = null;  // clear
     },
     editRecord(row) {
-      this.$store.commit('animals/setActiveItem', row.item)
-      this.$router.push('edit_taggeddata')
+      this.$store.commit('animals/setActiveItem', row.item);
+      this.$router.push('/edit_taggeddata');
     },
     deleteRecord(row) {
-      // TODO: confirm removal and remove record
-      console.log(row.item.url)
+      this.$store.commit('animals/setActiveItem', row.item);
+      this.$router.push('/delete_taggeddata');
     },
     downloadFile(url,filename) {
       this.$axios({
@@ -179,31 +179,31 @@ export default {
         link.setAttribute('download', filename);
         document.body.appendChild(link);
         link.click();
-      })
+      });
     },
     downloadTemplate() {
-      this.downloadFile('api/etag/file-template/?filetype=animals', 'taggeddata_template.csv')
+      this.downloadFile('api/etag/file-template/?filetype=animals', 'taggeddata_template.csv');
     },
     downloadData() {
-      this.downloadFile('api/etag/file-download/?format=csv&filetype=animals', 'taggeddata.csv')
+      this.downloadFile('api/etag/file-download/?format=csv&filetype=animals', 'taggeddata.csv');
     },
     failEvent(file, message, xhr) {
-      console.log(file)
-      console.log(message)
-      console.log(xhr)
+      console.log(file);
+      console.log(message);
+      console.log(xhr);
       // TODO: add failure handling
       // See for available events: https://rowanwins.github.io/vue-dropzone/docs/dist/#/events
     },
     sendingEvent(file, xhr, formData) {
-      formData.append('callback', this.api_callback)
-      formData.append('filetype', this.filetype)
+      formData.append('callback', this.api_callback);
+      formData.append('filetype', this.filetype);
     },
     successEvent(file, response) {
-      let taskid = response[0].callback.response.task_id
+      let taskid = response[0].callback.response.task_id;
       this.$axios.get("/api/queue/task/" + taskid)
         .then(response => {
           console.log(response.data.result)
-        })
+        });
       // TODO: check status code returned in response. Success here does not mean callback was successfull
     }
   }
