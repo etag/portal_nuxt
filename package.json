@@ -18,7 +18,7 @@
     "bootstrap": "^4.1.3",
     "bootstrap-select": "^1.13.12",
     "bootstrap-vue": "^2.8.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jquery-ui": "^1.12.1",
     "jquery-ui-themes": "^1.12.0",
     "leaflet": "^1.6.0",
