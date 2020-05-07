@@ -294,7 +294,7 @@ export default {
     methods: {
         initMap: function() {
             //var map =  this.$refs.map.mapObject;
-            this.sidebar = L.control.sidebar('sidebar').addTo(this.map);
+            this.sidebar = L.control.sidebar('sidebar').addTo(this.map).open('home');
         },
         getGeoLocation () {
             if (navigator.geolocation) {
