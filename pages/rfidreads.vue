@@ -19,6 +19,13 @@
           <font-awesome-icon icon="trash" />
         </b-button>
       </template>
+      <template v-slot:cell(accessory_data)="row">
+        <!-- format how Accessory Data is displayed -->
+        <template v-for="(value, name) in row.item.accessory_data">
+          <div>{{ name }}: {{ value }}</div>
+        </template>
+      </template>
+
     </b-table>
 
     <b-container fluid="sm">
