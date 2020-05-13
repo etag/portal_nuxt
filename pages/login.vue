@@ -58,7 +58,7 @@ export default {
 
     },
     unauthorized() {
-      this.$notify({group: 'alerts', text: 'Unable to login with the email and password provided.'})
+      this.$notify({group: 'alerts', text: 'Unable to login with the username and password provided.'})
     }
     //login () {
     //  let axios = this.$axios
