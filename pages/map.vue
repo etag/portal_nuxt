@@ -46,16 +46,16 @@
                 <h4>Filters</h4>
                 <div class="border-top my-3"></div>
                 <h6>Species</h6>
-                <select  class="selectpicker"  ref='select1'  id="species_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
-                    <option v-for="option in allspecies" v-bind:value="option.value">
-                        {{ option.text }}
+                <select  v-model="selected" class="selectpicker"  ref='select1'  id="species_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
+                    <option v-for="(item,key,index) in allspecies" v-bind:value="item">
+                        {{ key }}
                     </option>
                 </select>
 
                 <h6>Tag ID</h6>
-                          <select  class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
-                    <option v-for="option in alltagid" v-bind:value="option.value">
-                        {{ option.text }}
+                      <select  v-model="selected" class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
+                    <option v-for="option in alltagid" v-bind:value="option">
+                        {{ option}}
                     </option>
                     </select>
                 <h6>Data Privacy</h6>
@@ -66,12 +66,10 @@
                 <br><h6>Date</h6>
                 <!-- <div><h6>Date range: {{ date_value}}</h6></div> -->
                 <div align="center" display="block" style="width:85%;margin-left: 5%;">
-                <vue-slider v-model="date_value" :min=date0_s :max=date1_s :interval=86400 :enable-cross="false"  :tooltip="'always'" :tooltip-placement="['bottom', 'bottom']" :tooltip-formatter="dateformatter"></vue-slider>
+                <vue-slider ref=dateslider :value="daterange" :min=date0_s :max=date1_s :interval=86400 :enable-cross="false"  :tooltip="'always'" :tooltip-placement="['bottom', 'bottom']" :tooltip-formatter="dateformatter"></vue-slider>
                 </div>
-                <!--
-                  <br><div class="mt-3">Selected: <strong>{{ selected }}</strong></div></br>
-                -->
-                <br/><br/>
+                <br/>
+                <br/>
                 <button type="button" class="btn btn-primary btn-sm btn-block" @click="apply_filters"><strong>Apply Filters</strong></button>  
 
 
@@ -140,34 +138,19 @@ export default {
         return {
             sidebar: '',
             center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
-            //selected: [],
+            selected: [],
             datatype_sel: '',
             opt_displaytype: '',
-            date0_s: new Date('2011-04-01').getTime() / 1000,
-            date1_s: new Date('2012-01-01').getTime() / 1000,
-            date_value:[new Date('2011-04-01').getTime() / 1000,new Date('2012-01-01').getTime() / 1000],
+            //date0_s: new Date('2011-04-01').getTime() / 1000,
+            //date1_s: new Date('2012-01-01').getTime() / 1000,
+            //date_value:[new Date('2011-04-01').getTime() / 1000,new Date('2012-01-01').getTime() / 1000],
             dateformatter: v => new Date(v *1000).toISOString().split("T",1),
-            allspecies:[
-                {text:'Carolina Chickadee',value:'0416F1BAA0,0416F20F1F,0416F1CADD,0416F1EF53,0416F20B45'},
-                {text:'Dark-eyed Junco',value:'TU0005CD'},
-                {text:'Downey Woodpecker',value:'0416F20590'},
-                {text:'Northern Cardinal',value:'TU200005BB'},
-                {text:'Purple Martin',value:'TU0000720,BFBFBFBFBF,0416F1D055'},
-                {text:'Tufted titmouse',value:'0416F1E5F8,0416F204E3,0416F208FC'},
-                {text:'Window Dove',value:'0416F1DB87'},
-            ],
-            alltagid:[
-              {text:'011016DF6B',value:'011016DF6B'}, 
-              {text:'01103F7ABF',value:'01103F7ABF'}, 
-              {text:'01103F4B9D',value:'01103F4B9D'}, 
-              {text:'01103F84DB',value:'01103F84DB'}, 
-              {text:'01103F6189',value:'01103F6189'},
-            ],
-            tag_reads_summary: {
-                "35": {"01103F4B9D": 1, "01103F6189": 662, "011016DF6B": 287}, 
-                "14": {"01103F4B9D": 1}, 
-                "2": {"01103F4B9D": 1, "01103F84DB": 42, "01103F7ABF": 6},
-            },
+
+            // tag_reads_summary: {
+            //     "35": {"01103F4B9D": 1, "01103F6189": 662, "011016DF6B": 287}, 
+            //     "14": {"01103F4B9D": 1}, 
+            //     "2": {"01103F4B9D": 1, "01103F84DB": 42, "01103F7ABF": 6},
+            // },
             //readers: readers_json.results,
             readers: [],
             //locations: locations_json.results,
@@ -192,10 +175,13 @@ export default {
         this.animals = await this.fetchAll('/api/etag/animals/?page_size=150&format=json');
         this.tag_animal = await this.fetchAll('/api/etag/tag_animal/?page_size=100&format=json');
     },
+
     computed: {
         map: function () {return this.$refs.map.mapObject},
         osm: function () {return this.$refs.osm.mapObject},
+
         reader_location_dict: function() {
+          // dict to store reader_id: lat, lon, startime, endtime
             var new_dict = {};
             var reader_id,location_id,r_lat,r_lon;
             var starttime, endtime;
@@ -216,7 +202,9 @@ export default {
             }
             return new_dict;
         },
+      
         tag_animal_dict: function() {
+          // dict object to strore tag_id:animal_id, species
             var new_dict = {}
             var tag_id,animal_id,animal_name;
             for (var i=0; i<this.tag_animal.length;i++) {
@@ -231,7 +219,78 @@ export default {
             }
             return new_dict;
         },
+        allspecies: function () {
+          // reverse tag_animal_dict
+          // dict: species: tagid,tagid,tagid...
+          var new_dict = {};
+          var animal;
+          for (var tagid in this.tag_animal_dict) {
+            animal = this.tag_animal_dict[tagid][1];
+            if (new_dict.hasOwnProperty(animal)) {
+                new_dict[animal] = new_dict[animal] + "," + tagid;
+            } else {
+               new_dict[animal] = tagid ;
+            }
+          }
+          return new_dict;
+        },
+
+        alltagid: function () {
+          // get tag id list for filter
+          // scan tag_reads to get all unique id
+          var alltagidset = new Set();
+          for (var i=0; i<this.tag_reads.length;i++) {
+            alltagidset.add(this.tag_reads[i]['tag_id']);
+          }
+          return alltagidset;
+        },
+       
+       tag_reads_summary: function () {
+         // a summary dict on tag reads on each reader
+         // reader_id: tag_id:times, tag_id:times
+         var new_dict = {};
+         var temp_dict = {};
+         var readerid, tagid;
+         for (var i=0; i<this.tag_reads.length;i++) {
+           tagid = this.tag_reads[i]['tag_id'];
+           readerid = this.tag_reads[i]['reader_id'];
+           if (new_dict.hasOwnProperty(readerid)) {
+             temp_dict = {};
+             temp_dict = new_dict[readerid]
+             if (temp_dict.hasOwnProperty(tagid)) {
+                temp_dict[tagid] = temp_dict[tagid] + 1
+             } else { temp_dict[tagid] = 1; }
+             new_dict[readerid] = temp_dict;
+           } else {
+             temp_dict={};
+             temp_dict[tagid] = 1
+             new_dict[readerid] = temp_dict;
+           }}
+           console.log(new_dict);
+           return new_dict;
+       },
+
+        daterange: function () {
+          // find out the date range from tag_reads
+          var alldateset = new Set();
+          console.log(this.tag_reads.length);
+          for (var i=0; i<this.tag_reads.length;i++) {
+            alldateset.add(this.tag_reads[i]['tag_read_time'].split("T")[0]);
+          }
+          var alldatearray = Array.from(alldateset);
+          console.log(alldatearray);
+          var dateinsecond = [];
+          for (var i=0; i<alldatearray.length;i++) {
+            dateinsecond.push(new Date(alldatearray[i]).getTime() / 1000);
+          }
+          dateinsecond.sort(function(a, b){return a-b});
+          console.log(dateinsecond);
+          return [dateinsecond[0],dateinsecond.slice(-1)[0]];
+        }, 
+        date0_s:function() {return this.daterange[0];},
+        date1_s:function() {return this.daterange[1];},      
     },
+
     methods: {
         initMap: function() {
             //var map =  this.$refs.map.mapObject;
@@ -286,6 +345,7 @@ export default {
       }
       //display tags
       if (val == "tags") {
+        //alert(this.tag_reads_summary);
         //set the as summaries if is not selected
       //alert(this.tag_animal_dict['0416F20F1F']);
         var optionValue = $("input[name='opt_displaytype']:checked").val();
@@ -412,7 +472,9 @@ export default {
                       popinfo += '<strong>Animal Species: </strong>' + animal_species + "<br>";
                     } 
                     //[reader_lat, reader_lon,reader_s_time,reader_e_time]= extract_reader_location(reader_id);
-                    [reader_lat, reader_lon,reader_s_time,reader_e_time]= this.reader_location_dict[reader_id]; 
+                    if (reader_id in this.reader_location_dict) {
+                      [reader_lat, reader_lon,reader_s_time,reader_e_time]= this.reader_location_dict[reader_id]; 
+                    } else {continue};
                     popinfo += "<strong>Reader ID</strong>: " + this.tag_reads[i]['reader_id']+ "<br>";
                     popinfo += "<strong>Read Time</strong>: " + this.tag_reads[i]['tag_read_time']+ "<br>";
                     popinfo += "<strong>Public</strong>: " + this.tag_reads[i]['public'] + "<br>";
@@ -463,8 +525,9 @@ export default {
         //alert(tag_filter_list);  
         //date filter
         var date_filter = [];
-        var date0 = this.date_value[0];
-        var date1 = this.date_value[1];
+        //console.log(this.$refs.dateslider.value);
+        var date0 = this.$refs.dateslider.value[0];
+        var date1 = this.$refs.dateslider.value[1];
         if (date0 != this.date0_s || date1 != this.date1_s) {
           date_filter.push(date0,date1);}
           // else { alert("not time fileter");}
