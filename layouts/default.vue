@@ -1,7 +1,7 @@
 <template>
   <div>
     <notifications group="alerts"
-                   position="bottom right">
+                   position="top center">
       <template slot="body" slot-scope="props">
         <b-alert :show="props.item.duration || 3000"
                  dismissible
