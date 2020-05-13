@@ -18,6 +18,12 @@
           <font-awesome-icon icon="trash" />
         </b-button>
       </template>
+      <template v-slot:cell(field_data)="row">
+        <!-- format how Field Data is displayed -->
+        <template v-for="(value, name) in row.item.field_data">
+          <div>{{ name }}: {{ value }}</div>
+        </template>
+      </template>
     </b-table>
 
     <b-container fluid="sm">
