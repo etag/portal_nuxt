@@ -6,7 +6,12 @@
           <b-form-group id="Title" :label="'Editing User ID: ' + item.user_id"></b-form-group>
 
           <b-form-group id="input-group-1" label="Reader_ID" label-for="input-1">
-            <b-form-input id="Reader_ID" v-model="form.Reader_ID" :placeholder="item.reader_id"></b-form-input>
+            <b-form-input
+              id="Reader_ID"
+              v-model="form.Reader_ID"
+              :placeholder="item.reader_id"
+              readonly
+            ></b-form-input>
           </b-form-group>
 
           <b-form-group id="input-group-2" label="Description" label-for="input-2">
@@ -84,10 +89,34 @@ export default {
   methods: {
     saveChanges(evt) {
       evt.preventDefault();
-      this.$store.commit("update", {
-        description: this.form.Description,
-        reader_id: this.form.Reader_ID
-      });
+      let { result } = this.$axios
+        .get(
+          "https://head.ouetag.org/api/etag/reader_location/?reader_id=" +
+            this.form.reader_id,
+          {
+            headers: {
+              Authorization: this.$auth.$storage._state["_token.local"]
+            }
+          }
+        )
+        .then(function(result) {
+          this.item.description = this.form.Description;
+          this.item.reader_id = this.form.reader_id;
+          this.$store.commit("reader/setActiveItem", this.item);
+          this.$axios
+            .patch("/api/etag/reader_location/" + result.location_id, {
+              url: this.$store.state.readers.activeItem.url,
+              reader_id: this.form.reader_id,
+              description: this.form.Description,
+              user_id: this.$store.state.readers.activeItem.user_id,
+              headers: {
+                Authorization: this.$auth.$storage._state["_token.local"]
+              }
+            })
+            .then(function() {
+              this.$router.push("readerdata");
+            });
+        });
     }
   }
 };
