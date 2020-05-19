@@ -22,12 +22,12 @@
             ></b-form-input>
           </b-form-group>
 
-          <b-form-group id="input-group-3" label="Latitude" label-for="input-3">
-            <b-form-input id="input-3" v-model="form.cor_lat" :placeholder="coordinates.lat"></b-form-input>
+          <b-form-group id="input-group-3" label="Start Timestamp" label-for="input-3">
+            <b-form-input id="input-3" v-model="form.cor_lat" :placeholder="timestamp.start"></b-form-input>
           </b-form-group>
 
-          <b-form-group id="input-group-4" label="Longitude" label-for="input-4">
-            <b-form-input id="input-4" v-model="form.cor_lon" :placeholder="coordinates.lon"></b-form-input>
+          <b-form-group id="input-group-4" label="End Timestamp" label-for="input-4">
+            <b-form-input id="input-4" v-model="form.cor_lon" :placeholder="timestamp.end"></b-form-input>
           </b-form-group>
 
           <b-button type="submit" variant="primary">Submit</b-button>
@@ -51,9 +51,9 @@ export default {
         Cord_lat: "",
         Cord_lon: ""
       },
-      coordinates: {
-        lat: "",
-        lon: ""
+      timestamp: {
+        start: "",
+        end: ""
       }
     };
   },
@@ -73,17 +73,14 @@ export default {
           headers: { Authorization: this.$auth.$storage._state["_token.local"] }
         }
       )
-      .then(function(reader_data, vm) {
-        let { location_data } = self.$axios
-          .get(
-            "/api/etag/locations/?location_id=" +
-              reader_data.data.results[0].location_id +
-              "&format=json"
-          )
-          .then(function(location_data) {
-            self.coordinates.lat = location_data.data.results[0].latitude;
-            self.coordinates.lon = location_data.data.results[0].longitude;
-          });
+      .then(function(reader_data) {
+        try {
+          self.timestamp.start = reader_data.data.results[0].start_timestamp;
+          self.timestamp.end = reader_data.data.results[0].end_timestamp;
+        } catch {
+          self.timestamp.start = "None";
+          self.timestamp.end = "None";
+        }
       });
   },
   methods: {
@@ -108,18 +105,15 @@ export default {
           self.$store.commit("readers/update", payload);
           console.log(result.data.results[0].location_id);
           self.$axios
-            .patch(
-              "/api/etag/reader_location/" + result.data.results[0].location_id,
-              {
-                url: self.$store.state.readers.activeItem.url,
-                reader_id: self.form.reader_id,
-                description: self.form.Description,
-                user_id: self.$store.state.readers.activeItem.user_id,
-                headers: {
-                  Authorization: self.$auth.$storage._state["_token.local"]
-                }
+            .patch("/api/etag/readers/" + result.data.results[0].reader_id, {
+              url: self.$store.state.readers.activeItem.url,
+              reader_id: self.form.reader_id,
+              description: self.form.Description,
+              user_id: self.$store.state.readers.activeItem.user_id,
+              headers: {
+                Authorization: self.$auth.$storage._state["_token.local"]
               }
-            )
+            })
             .then(function() {
               self.$router.push("readerdata");
             });
