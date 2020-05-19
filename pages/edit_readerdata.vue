@@ -89,10 +89,11 @@ export default {
   methods: {
     saveChanges(evt) {
       evt.preventDefault();
+      var self = this;
       let { result } = this.$axios
         .get(
           "https://head.ouetag.org/api/etag/reader_location/?reader_id=" +
-            this.form.reader_id,
+            this.$store.state.readers.activeItem.reader_id,
           {
             headers: {
               Authorization: this.$auth.$storage._state["_token.local"]
@@ -100,21 +101,27 @@ export default {
           }
         )
         .then(function(result) {
-          this.item.description = this.form.Description;
-          this.item.reader_id = this.form.reader_id;
-          this.$store.commit("reader/setActiveItem", this.item);
-          this.$axios
-            .patch("/api/etag/reader_location/" + result.location_id, {
-              url: this.$store.state.readers.activeItem.url,
-              reader_id: this.form.reader_id,
-              description: this.form.Description,
-              user_id: this.$store.state.readers.activeItem.user_id,
-              headers: {
-                Authorization: this.$auth.$storage._state["_token.local"]
+          var payload = {
+            description: self.form.Description,
+            reader_id: self.form.reader_id
+          };
+          self.$store.commit("readers/update", payload);
+          console.log(result.data.results[0].location_id);
+          self.$axios
+            .patch(
+              "/api/etag/reader_location/" + result.data.results[0].location_id,
+              {
+                url: self.$store.state.readers.activeItem.url,
+                reader_id: self.form.reader_id,
+                description: self.form.Description,
+                user_id: self.$store.state.readers.activeItem.user_id,
+                headers: {
+                  Authorization: self.$auth.$storage._state["_token.local"]
+                }
               }
-            })
+            )
             .then(function() {
-              this.$router.push("readerdata");
+              self.$router.push("readerdata");
             });
         });
     }
