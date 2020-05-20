@@ -275,18 +275,18 @@ export default {
         daterange: function () {
           // find out the date range from tag_reads
           var alldateset = new Set();
-          console.log(this.tag_reads.length);
+          //console.log(this.tag_reads.length);
           for (var i=0; i<this.tag_reads.length;i++) {
             alldateset.add(this.tag_reads[i]['tag_read_time'].split("T")[0]);
           }
           var alldatearray = Array.from(alldateset);
-          console.log(alldatearray);
+          //console.log(alldatearray);
           var dateinsecond = [];
           for (var i=0; i<alldatearray.length;i++) {
             dateinsecond.push(new Date(alldatearray[i]).getTime() / 1000);
           }
           dateinsecond.sort(function(a, b){return a-b});
-          console.log(dateinsecond);
+          //console.log(dateinsecond);
           return [dateinsecond[0],dateinsecond.slice(-1)[0]];
         }, 
         date0_s:function() {return this.daterange[0];},
