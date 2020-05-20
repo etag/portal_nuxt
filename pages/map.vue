@@ -66,7 +66,9 @@
                 <br><h6>Date</h6>
                 <!-- <div><h6>Date range: {{ date_value}}</h6></div> -->
                 <div align="center" display="block" style="width:85%;margin-left: 5%;">
+                <div v-if="date1_s">
                 <vue-slider ref=dateslider :value="daterange" :min=date0_s :max=date1_s :interval=86400 :enable-cross="false"  :tooltip="'always'" :tooltip-placement="['bottom', 'bottom']" :tooltip-formatter="dateformatter"></vue-slider>
+                </div>
                 </div>
                 <br/>
                 <br/>
