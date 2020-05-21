@@ -1,8 +1,3 @@
-<!--
-
-Edit this file within the <template> tags to change the About tab
-
--->
 <template>
   <div class="about text-left">
     <!-- FIXME: add instructions or form to register an account -->
