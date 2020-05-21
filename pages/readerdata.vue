@@ -3,7 +3,7 @@
     <!-- begin description section -->
     <template>
       <b-card>
-        This is a place holder for instruction on this page.
+                Please upload data on this page before uploading RFID Reads.  If you have already uploaded both Tagged Data and Reader Data, you can go directly to <a href="https://head.ouetag.org/rfidreads" target="_blank">RFID Reads</a>.  To view templates and example data, visit the <a href="https://github.com/etag/user_documentation/blob/master/User_Guide_for_ETAG.md#quick-start-guide-how-do-i-use-the-etag-website" target="_blank">User Guide, step 4.</a>
       </b-card>
     </template>
     <!-- end description section -->
