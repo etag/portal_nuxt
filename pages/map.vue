@@ -3,7 +3,7 @@
   <div>
     <div id="map-wrap" style="height: 90vh; width: 100%;">
         <l-map ref="map" :zoom="15" :center="center" >
-          <l-tile-layer ref="osm" name=osm layerType="base"  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
+          <l-tile-layer ref="osm" name=osm layerType="base"  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
           <l-marker :lat-lng="center"></l-marker>
         </l-map>
         <div id="sidebar" class="leaflet-sidebar collapsed">
@@ -46,14 +46,14 @@
                 <h4>Filters</h4>
                 <div class="border-top my-3"></div>
                 <h6>Species</h6>
-                <select  v-model="selected" class="selectpicker"  ref='select1'  id="species_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
+                <select  v-if="allspecies" v-model="selected" class="selectpicker"  ref='select1'  id="species_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
                     <option v-for="(item,key,index) in allspecies" v-bind:value="item">
                         {{ key }}
                     </option>
                 </select>
 
                 <h6>Tag ID</h6>
-                      <select  v-model="selected" class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
+                      <select v-if="alltagid" v-model="selected" class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
                     <option v-for="option in alltagid" v-bind:value="option">
                         {{ option}}
                     </option>
@@ -234,6 +234,7 @@ export default {
                new_dict[animal] = tagid ;
             }
           }
+          //console.log(new_dict);
           return new_dict;
         },
 
@@ -244,7 +245,7 @@ export default {
           for (var i=0; i<this.tag_reads.length;i++) {
             alltagidset.add(this.tag_reads[i]['tag_id']);
           }
-          return alltagidset;
+          return Array.from(alltagidset);
         },
        
        tag_reads_summary: function () {
@@ -268,7 +269,7 @@ export default {
              temp_dict[tagid] = 1
              new_dict[readerid] = temp_dict;
            }}
-           console.log(new_dict);
+           //console.log(new_dict);
            return new_dict;
        },
 
@@ -444,9 +445,11 @@ export default {
       display_raw_tag_with_filter(filter_tag,filter_date) {
             var tagfilterflag = (filter_tag.length > 0);
             var datefilterflag = (filter_date.length > 0);
+            //console.log(tagfilterflag);
             //alert(filter_tag.length);
             //alert(filter_tag.includes('0416F1DB87'));
             var icount = 0;
+            //this.map.removeLayer(this.readers_marker);
             this.clear_map();
             this.readers_marker.clearLayers();
               var tag_id, reader_id,reader_lat,reader_lon,popinfo;
@@ -501,6 +504,7 @@ export default {
             }
 
             if (icount >= 1) {
+              alert("Total record found: " + icount.toString());
               this.map.addLayer(this.readers_marker);
               this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});}
             else {alert("Found zero record!");}
@@ -514,12 +518,11 @@ export default {
       
         var tag_filter_list = [];
         //ignore length = 0 or length = allspecies.length
-        if (species_filter.length > 0 && species_filter.length < this.allspecies.length ) {
+        if (species_filter.length > 0 ) {
           for (var i = 0; i < species_filter.length; i++) {
             tag_filter_list.push(species_filter[i].split(","));
           }
         }
-
         //ignore length =0 or length = alltagid.length;
         if (tag_filter.length > 0 && tag_filter.length < this.alltagid.length ) {
           tag_filter_list.push(tag_filter);
@@ -533,7 +536,7 @@ export default {
         if (date0 != this.date0_s || date1 != this.date1_s) {
           date_filter.push(date0,date1);}
           // else { alert("not time fileter");}
-
+        //alert(tag_filter_list);
         this.display_raw_tag_with_filter(tag_filter_list.flat(),date_filter);
       },
 
