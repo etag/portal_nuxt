@@ -3,7 +3,19 @@
   <div>
     <div id="map-wrap" style="height: 90vh; width: 100%;">
         <l-map ref="map" :zoom="15" :center="center" >
-          <l-tile-layer ref="osm" name=osm layerType="base"  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
+              <l-control-layers :position="layersPosition" :collapsed="false" :sort-layers="true"/>
+                    <l-tile-layer
+        v-for="tileProvider in tileProviders"
+        :key="tileProvider.name"
+        :name="tileProvider.name"
+        :visible="tileProvider.visible"
+        :url="tileProvider.url"
+        :attribution="tileProvider.attribution"
+        :token="token"
+        layer-type="base"
+      />
+<!--          <l-tile-layer ref="osm" name=osm layerType="base"  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
+-->
           <l-marker :lat-lng="center"></l-marker>
         </l-map>
         <div id="sidebar" class="leaflet-sidebar collapsed">
@@ -128,6 +140,23 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+const tileProviders = [
+  {
+    name: 'OpenStreet Map',
+    visible: true,
+    attribution:
+      '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  },
+  {
+    name: 'Esri World Imagery',
+    visible: false,
+    url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution:
+      'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
+  },
+];
+
 export default {
     auth: false, // do not require to be logged in to view this page
     components: {
@@ -143,6 +172,7 @@ export default {
         return {
             sidebar: '',
             center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
+            tileProviders: tileProviders,
             clustering_checkbox: 'not_disabled',
             selected: [],
             datatype_sel: '',
@@ -184,7 +214,7 @@ export default {
 
     computed: {
         map: function () {return this.$refs.map.mapObject},
-        osm: function () {return this.$refs.osm.mapObject},
+        //osm: function () {return this.$refs.osm.mapObject},
 
         reader_location_dict: function() {
           // dict to store reader_id: lat, lon, startime, endtime
@@ -559,10 +589,9 @@ export default {
       // clear map 
       clear_map() {
         var mymap = this.map;
-        var osmlayer = this.osm;
         mymap.eachLayer(function (layer) {
             //keep the basemap layer
-            if (layer != osmlayer) {mymap.removeLayer(layer);};
+            if (!(layer instanceof L.TileLayer)) {mymap.removeLayer(layer);};
             });
       },
     },
