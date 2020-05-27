@@ -168,7 +168,8 @@
         return this.$store.state.tagReads.pageSize
       },
       totalPages () {
-        return Math.ceil(this.totalCount / this.pageSize)
+        let pages = Math.ceil(this.totalCount / this.pageSize);
+        return pages > 0 ? pages : 1;
       },
       prevUrl () {
         return this.$store.state.tagReads.prev

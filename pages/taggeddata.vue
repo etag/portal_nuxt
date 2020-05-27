@@ -160,7 +160,8 @@ export default {
       return this.$store.state.animals.pageSize
     },
     totalPages () {
-      return Math.ceil(this.totalCount / this.pageSize)
+      let pages = Math.ceil(this.totalCount / this.pageSize);
+      return pages > 0 ? pages : 1;
     },
     prevUrl () {
       return this.$store.state.animals.prev
