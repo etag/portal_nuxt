@@ -40,7 +40,9 @@
                 <b-form-radio-group v-model='opt_displaytype' size='lg' id="opt_displaytype"  @change="displaytype_onChange"  name="opt_displaytype" stacked>
                 <b-form-radio  ref="tag_summaries "value="tag_summaries">Summaries</b-form-radio>
                 <b-form-radio ref="raw_tag_reads" value="raw_tag_reads">Raw tag reads</b-form-radio>
-                </b-form-radio-group>
+                </b-form-radio-group><br>
+                  <b-form-checkbox size='lg' id="checkbox-disableclustering" v-model="clustering_checkbox" v-on:change="disableClustering" name="checkbox-1" value="disbaled" unchecked-value="not_disabled">
+      Disable clustering on map</b-form-checkbox>
                 </b-form-group>
                 <!-- display options -->
                 <h4>Filters</h4>
@@ -102,6 +104,7 @@
 import 'leaflet-sidebar-v2';
 import 'leaflet-sidebar-v2/css/leaflet-sidebar.css';
 import 'leaflet.markercluster';
+import 'leaflet.markercluster.freezable';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import "@fortawesome/fontawesome-free";
@@ -140,6 +143,7 @@ export default {
         return {
             sidebar: '',
             center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
+            clustering_checkbox: 'not_disabled',
             selected: [],
             datatype_sel: '',
             opt_displaytype: '',
@@ -166,7 +170,7 @@ export default {
             //tag_animal: tag_animal_json.results,
             tag_animal: [],
             readers_marker: L.featureGroup(),
-            readers_marker: L.markerClusterGroup(),
+            readers_marker: L.markerClusterGroup(), //{disableClusteringAtZoom:10})
         }
     },
     async fetch () {
@@ -434,6 +438,18 @@ export default {
 
       } 
       
+      },
+      //
+      disableClustering() {
+        //alert(this.clustering_checkbox);
+        var status = this.clustering_checkbox;
+        if (status == "not_disabled") {
+          ////{disableClusteringAtZoom:10})
+          this.readers_marker.disableClustering();
+        } else {
+          ////{disableClusteringAtZoom:10})
+          this.readers_marker.enableClustering();
+        }
       },
       // display type
       displaytype_onChange(val) {
