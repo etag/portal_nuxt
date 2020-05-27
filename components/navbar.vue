@@ -15,6 +15,7 @@
           <b-nav-item title="Tagged Data" to="/taggeddata" exact exact-active-class="active" no-prefetch>Tagged Data</b-nav-item>
           <b-nav-item title="RFID Reads" to="/rfidreads" exact exact-active-class="active" no-prefetch>RFID Reads</b-nav-item>
           <b-nav-item title="Antenna Design" to="/antenna" exact exact-active-class="active" no-prefetch>Antenna Design</b-nav-item>
+          <b-nav-item title="Task History" to="/taskhistory" exact exact-active-class="active" no-prefetch>Task History</b-nav-item>
           <b-nav-item title="Help" href="https://github.com/etag/user_documentation/blob/master/User_Guide_for_ETAG.md" target="_blank">Help</b-nav-item>
           <b-nav-dropdown right :text="$auth.user.username">
             <b-dropdown-item title="Profile" to="/profile" exact exact-active-class="active" no-prefetch>Profile</b-dropdown-item>
