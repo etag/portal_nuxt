@@ -3,7 +3,7 @@
   <div>
     <div id="map-wrap" style="height: 90vh; width: 100%;">
         <l-map ref="map" :zoom="15" :center="center" >
-              <l-control-layers :position="layersPosition" :collapsed="false" :sort-layers="true"/>
+              <l-control-layers  :collapsed="false" :sort-layers="true"/>
                     <l-tile-layer
         v-for="tileProvider in tileProviders"
         :key="tileProvider.name"
@@ -11,7 +11,7 @@
         :visible="tileProvider.visible"
         :url="tileProvider.url"
         :attribution="tileProvider.attribution"
-        :token="token"
+        :token="tileProvider.token"
         layer-type="base"
       />
 <!--          <l-tile-layer ref="osm" name=osm layerType="base"  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
@@ -147,13 +147,15 @@ const tileProviders = [
     attribution:
       '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    token:'',
   },
   {
     name: 'Esri World Imagery',
     visible: false,
-    url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attribution:
       'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
+    token:'',
   },
 ];
 
