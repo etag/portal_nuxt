@@ -56,8 +56,8 @@ export default {
       form: {
         Reader_ID: "",
         Description: "",
-        Cord_lat: "",
-        Cord_lon: ""
+        cor_lat: "",
+        cor_lon: ""
       },
       timestamp: {
         start: "",
@@ -66,6 +66,9 @@ export default {
       coordinates: {
         lat: "",
         lon: ""
+      },
+      location: {
+        exist: false
       }
     };
   },
@@ -89,20 +92,23 @@ export default {
         try {
           self.timestamp.start = reader_data.data.results[0].start_timestamp;
           self.timestamp.end = reader_data.data.results[0].end_timestamp;
+          let { location_data } = self.$axios
+            .get(
+              "/api/etag/locations/?location_id=" +
+                reader_data.data.results[0].location_id +
+                "&format=json"
+            )
+            .then(function(location_data) {
+              self.coordinates.lat = location_data.data.results[0].latitude;
+              self.coordinates.long = location_data.data.results[0].longitude;
+              self.location.exist = true;
+            });
         } catch {
           self.timestamp.start = "None";
           self.timestamp.end = "None";
+          self.coordinates.lat = "None";
+          self.coordinates.long = "None";
         }
-        let { location_data } = self.$axios
-          .get(
-            "/api/etag/locations/?location_id=" +
-              reader_data.data.results[0].location_id +
-              "&format=json"
-          )
-          .then(function(location_data) {
-            self.coordinates.lat = location_data.data.results[0].latitude;
-            self.coordinates.long = location_data.data.results[0].longitude;
-          });
       });
   },
   methods: {
@@ -120,13 +126,7 @@ export default {
           }
         )
         .then(function(result) {
-          var payload = {
-            description: self.form.Description,
-            reader_id: self.form.reader_id
-          };
-
-          self.$store.commit("readers/update", payload);
-
+          self.form.Reader_ID = self.$store.state.readers.activeItem.reader_id;
           if (typeof self.form.Description == "undefined") {
             self.form.Description = document
               .getElementById("Description")
@@ -153,41 +153,47 @@ export default {
               .getAttribute("placeholder");
           }
 
-          self.$axios.patch(
-            "/api/etag/readers/" + result.data.results[0].reader_id,
-            {
-              url: self.$store.state.readers.activeItem.url,
-              reader_id: self.form.reader_id,
-              description: self.form.Description,
-              user_id: self.$store.state.readers.activeItem.user_id,
-              headers: {
-                Authorization: self.$auth.$storage._state["_token.local"]
-              }
-            }
-          );
+          var payload = {
+            description: self.form.Description,
+            reader_id: self.form.Reader_ID
+          };
 
-          self.$axios.patch(
-            "/api/etag/reader_location/" + result.data.results[0].reader_id,
-            {
-              start_timestamp: self.form.time_s,
-              end_timestamp: self.form.time_e,
-              headers: {
-                Authorization: self.$auth.$storage._state["_token.local"]
-              }
+          self.$store.commit("readers/update", payload);
+          self.$axios.patch("/api/etag/readers/" + self.form.Reader_ID, {
+            url: self.$store.state.readers.activeItem.url,
+            reader_id: self.form.Reader_ID,
+            description: self.form.Description,
+            user_id: self.$store.state.readers.activeItem.user_id,
+            headers: {
+              Authorization: self.$auth.$storage._state["_token.local"]
             }
-          );
-
-          self.$axios.patch(
-            "/api/etag/locations/" + result.data.results[0].location_id,
-            {
-              latitude: self.form.cor_lat,
-              longitude: self.form.cor_long,
-              headers: {
-                Authorization: self.$auth.$storage._state["_token.local"]
+          });
+          if (self.location.exist == false) {
+            // This item has no cooresponding reader location or locations item
+            // So no patch is needed
+          } else {
+            self.$axios.patch(
+              "/api/etag/reader_location/" + result.data.results[0].reader_id,
+              {
+                start_timestamp: self.form.time_s,
+                end_timestamp: self.form.time_e,
+                headers: {
+                  Authorization: self.$auth.$storage._state["_token.local"]
+                }
               }
-            }
-          );
+            );
 
+            self.$axios.patch(
+              "/api/etag/locations/" + result.data.results[0].location_id,
+              {
+                latitude: self.form.cor_lat,
+                longitude: self.form.cor_long,
+                headers: {
+                  Authorization: self.$auth.$storage._state["_token.local"]
+                }
+              }
+            );
+          }
           self.$router.push("readerdata");
         });
     }
