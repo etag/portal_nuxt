@@ -14,9 +14,7 @@
         :token="tileProvider.token"
         layer-type="base"
       />
-<!--          <l-tile-layer ref="osm" name=osm layerType="base"  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
--->
-          <l-marker :lat-lng="center"></l-marker>
+        <l-marker :lat-lng="center"></l-marker>
         </l-map>
         <div id="sidebar" class="leaflet-sidebar collapsed">
     <!-- Nav tabs -->
@@ -380,7 +378,8 @@ export default {
                   }
             }
       this.map.addLayer(this.readers_marker);
-      this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
+      if (this.readers_marker.getLayers().length > 0) { 
+        this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});}
       }
       //display tags
       if (val == "tags") {
@@ -465,7 +464,9 @@ export default {
                   }
             }
           this.map.addLayer(this.readers_marker);
-          this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
+          if (this.readers_marker.getLayers().length > 0) { 
+                this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});}
+
         }
 
       } 
