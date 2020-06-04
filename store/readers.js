@@ -10,8 +10,8 @@ export const state = () => ({
 
 export const mutations = {
   update(state, payload) {
-    state.readers.activeItem.description = payload.description;
-    state.readers.activeItem.reader_id = payload.reader_id;
+    state.activeItem.description = payload.description;
+    state.activeItem.reader_id = payload.reader_id;
   },
   add(state, reader) {
     state.list.push(reader);
