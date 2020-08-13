@@ -6,7 +6,7 @@
     <div id="listruns">
       <!-- This is a place holder to select results of previous runs -->
     </div>
-    <div id="input">
+    <div id="input" style="margin:50px;">
       <b-form @submit.prevent="submitAntenna">
         <b-form-group id="ra-group" label="Width" label-for="ra-input">
           <b-form-input id="ra-input" v-model="ra" required/>
