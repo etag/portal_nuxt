@@ -3,8 +3,18 @@
   <div>
     <div id="map-wrap" style="height: 90vh; width: 100%;">
         <l-map ref="map" :zoom="15" :center="center" >
-          <l-tile-layer ref="osm" name=osm layerType="base"  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
-          <l-marker :lat-lng="center"></l-marker>
+              <l-control-layers  :collapsed="false" :sort-layers="true"/>
+                    <l-tile-layer
+        v-for="tileProvider in tileProviders"
+        :key="tileProvider.name"
+        :name="tileProvider.name"
+        :visible="tileProvider.visible"
+        :url="tileProvider.url"
+        :attribution="tileProvider.attribution"
+        :token="tileProvider.token"
+        layer-type="base"
+      />
+        <l-marker :lat-lng="center"></l-marker>
         </l-map>
         <div id="sidebar" class="leaflet-sidebar collapsed">
     <!-- Nav tabs -->
@@ -40,20 +50,22 @@
                 <b-form-radio-group v-model='opt_displaytype' size='lg' id="opt_displaytype"  @change="displaytype_onChange"  name="opt_displaytype" stacked>
                 <b-form-radio  ref="tag_summaries "value="tag_summaries">Summaries</b-form-radio>
                 <b-form-radio ref="raw_tag_reads" value="raw_tag_reads">Raw tag reads</b-form-radio>
-                </b-form-radio-group>
+                </b-form-radio-group><br>
+                  <b-form-checkbox size='lg' id="checkbox-disableclustering" v-model="clustering_checkbox" v-on:change="disableClustering" name="checkbox-1" value="disbaled" unchecked-value="not_disabled">
+      Disable clustering on map</b-form-checkbox>
                 </b-form-group>
                 <!-- display options -->
                 <h4>Filters</h4>
                 <div class="border-top my-3"></div>
                 <h6>Species</h6>
-                <select  v-model="selected" class="selectpicker"  ref='select1'  id="species_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
+                <select  v-if="allspecies" v-model="selected" class="selectpicker"  ref='select1'  id="species_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
                     <option v-for="(item,key,index) in allspecies" v-bind:value="item">
                         {{ key }}
                     </option>
                 </select>
 
                 <h6>Tag ID</h6>
-                      <select  v-model="selected" class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
+                      <select v-if="alltagid" v-model="selected" class="selectpicker" ref='select2' id="tag_selector" title="Choose one or more..." data-live-search="true" multiple data-actions-box="true">
                     <option v-for="option in alltagid" v-bind:value="option">
                         {{ option}}
                     </option>
@@ -102,6 +114,7 @@
 import 'leaflet-sidebar-v2';
 import 'leaflet-sidebar-v2/css/leaflet-sidebar.css';
 import 'leaflet.markercluster';
+import 'leaflet.markercluster.freezable';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import "@fortawesome/fontawesome-free";
@@ -125,6 +138,25 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+const tileProviders = [
+  {
+    name: 'OpenStreet Map',
+    visible: true,
+    attribution:
+      '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    token:'',
+  },
+  {
+    name: 'Esri World Imagery',
+    visible: false,
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution:
+      'Map data: &copy; <a href=<a href="http://www.esri.com/">Esri</a>',
+    token:'',
+  },
+];
+
 export default {
     auth: false, // do not require to be logged in to view this page
     components: {
@@ -140,6 +172,8 @@ export default {
         return {
             sidebar: '',
             center: [35.2059, -97.4457], // Coordinates for University of Oklahoma
+            tileProviders: tileProviders,
+            clustering_checkbox: 'not_disabled',
             selected: [],
             datatype_sel: '',
             opt_displaytype: '',
@@ -166,7 +200,7 @@ export default {
             //tag_animal: tag_animal_json.results,
             tag_animal: [],
             readers_marker: L.featureGroup(),
-            readers_marker: L.markerClusterGroup(),
+            readers_marker: L.markerClusterGroup(), //{disableClusteringAtZoom:10})
         }
     },
     async fetch () {
@@ -180,7 +214,7 @@ export default {
 
     computed: {
         map: function () {return this.$refs.map.mapObject},
-        osm: function () {return this.$refs.osm.mapObject},
+        //osm: function () {return this.$refs.osm.mapObject},
 
         reader_location_dict: function() {
           // dict to store reader_id: lat, lon, startime, endtime
@@ -234,6 +268,7 @@ export default {
                new_dict[animal] = tagid ;
             }
           }
+          //console.log(new_dict);
           return new_dict;
         },
 
@@ -244,7 +279,7 @@ export default {
           for (var i=0; i<this.tag_reads.length;i++) {
             alltagidset.add(this.tag_reads[i]['tag_id']);
           }
-          return alltagidset;
+          return Array.from(alltagidset);
         },
        
        tag_reads_summary: function () {
@@ -268,7 +303,7 @@ export default {
              temp_dict[tagid] = 1
              new_dict[readerid] = temp_dict;
            }}
-           console.log(new_dict);
+           //console.log(new_dict);
            return new_dict;
        },
 
@@ -343,7 +378,8 @@ export default {
                   }
             }
       this.map.addLayer(this.readers_marker);
-      this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
+      if (this.readers_marker.getLayers().length > 0) { 
+        this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});}
       }
       //display tags
       if (val == "tags") {
@@ -428,11 +464,25 @@ export default {
                   }
             }
           this.map.addLayer(this.readers_marker);
-          this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});
+          if (this.readers_marker.getLayers().length > 0) { 
+                this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});}
+
         }
 
       } 
       
+      },
+      //
+      disableClustering() {
+        //alert(this.clustering_checkbox);
+        var status = this.clustering_checkbox;
+        if (status == "not_disabled") {
+          ////{disableClusteringAtZoom:10})
+          this.readers_marker.disableClustering();
+        } else {
+          ////{disableClusteringAtZoom:10})
+          this.readers_marker.enableClustering();
+        }
       },
       // display type
       displaytype_onChange(val) {
@@ -444,9 +494,11 @@ export default {
       display_raw_tag_with_filter(filter_tag,filter_date) {
             var tagfilterflag = (filter_tag.length > 0);
             var datefilterflag = (filter_date.length > 0);
+            //console.log(tagfilterflag);
             //alert(filter_tag.length);
             //alert(filter_tag.includes('0416F1DB87'));
             var icount = 0;
+            //this.map.removeLayer(this.readers_marker);
             this.clear_map();
             this.readers_marker.clearLayers();
               var tag_id, reader_id,reader_lat,reader_lon,popinfo;
@@ -501,6 +553,7 @@ export default {
             }
 
             if (icount >= 1) {
+              alert("Total record found: " + icount.toString());
               this.map.addLayer(this.readers_marker);
               this.map.fitBounds(this.readers_marker.getBounds(),{maxZoom:10});}
             else {alert("Found zero record!");}
@@ -514,12 +567,11 @@ export default {
       
         var tag_filter_list = [];
         //ignore length = 0 or length = allspecies.length
-        if (species_filter.length > 0 && species_filter.length < this.allspecies.length ) {
+        if (species_filter.length > 0 ) {
           for (var i = 0; i < species_filter.length; i++) {
             tag_filter_list.push(species_filter[i].split(","));
           }
         }
-
         //ignore length =0 or length = alltagid.length;
         if (tag_filter.length > 0 && tag_filter.length < this.alltagid.length ) {
           tag_filter_list.push(tag_filter);
@@ -533,17 +585,16 @@ export default {
         if (date0 != this.date0_s || date1 != this.date1_s) {
           date_filter.push(date0,date1);}
           // else { alert("not time fileter");}
-
+        //alert(tag_filter_list);
         this.display_raw_tag_with_filter(tag_filter_list.flat(),date_filter);
       },
 
       // clear map 
       clear_map() {
         var mymap = this.map;
-        var osmlayer = this.osm;
         mymap.eachLayer(function (layer) {
             //keep the basemap layer
-            if (layer != osmlayer) {mymap.removeLayer(layer);};
+            if (!(layer instanceof L.TileLayer)) {mymap.removeLayer(layer);};
             });
       },
     },
