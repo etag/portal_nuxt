@@ -6,31 +6,22 @@
           <b-form-group id="Title" :label="'Editing Animal ID: ' + item.animal_id"></b-form-group>
 
           <b-form-group id="input-group-1" label="SPECIES" label-for="input-1">
-            <b-form-input id="input_Species" v-model="form.Species" :placeholder="item.species"></b-form-input>
+            <b-form-input id="input_Species" v-model="form.Species" text="item.species"></b-form-input>
           </b-form-group>
 
           <b-form-group id="input-group-2" label="ANIMAL_CURRENTMARKER">
-            <b-form-input
-              id="input_ANIMAL_CURRENTMARKER"
-              v-model="form.ANIMAL_CURRENTMARKER"
-              :placeholder="item.field_data.ANIMAL_CURRENTMARKER"
-            ></b-form-input>
+            <b-form-input id="input_ANIMAL_CURRENTMARKER" v-model="form.ANIMAL_CURRENTMARKER"></b-form-input>
           </b-form-group>
 
           <b-form-group id="input-group-3" label="ANIMAL_IDENTIFYINGMARKERSTARTDATE">
             <b-form-input
               id="input_ANIMAL_IDENTIFYINGMARKERSTARTDATE"
               v-model="form.ANIMAL_IDENTIFYINGMARKERSTARTDATE"
-              :placeholder="item.field_data.ANIMAL_IDENTIFYINGMARKERSTARTDATE"
             ></b-form-input>
           </b-form-group>
 
           <b-form-group id="input-group-4" label="ANIMAL_ORIGINALMARKER">
-            <b-form-input
-              id="input_ANIMAL_ORIGINALMARKER"
-              v-model="form.ANIMAL_ORIGINALMARKER"
-              :placeholder="item.field_data.ANIMAL_ORIGINALMARKER"
-            ></b-form-input>
+            <b-form-input id="input_ANIMAL_ORIGINALMARKER" v-model="form.ANIMAL_ORIGINALMARKER"></b-form-input>
           </b-form-group>
 
           <b-button type="submit" variant="primary">Submit</b-button>
@@ -43,21 +34,25 @@
 
 <script>
 export default {
-  data() {
-    return {
-      form: {
-        Species: "",
-        ANIMAL_CURRENTMARKER: "",
-        ANIMAL_IDENTIFYINGMARKERSTARTDATE: "",
-        ANIMAL_ORIGINALMARKER: ""
-      }
-    };
-  },
   computed: {
     item() {
       return this.$store.state.animals.activeItem;
-    }
+    },
   },
+  data() {
+    return {
+      form: {
+        Species: this.$store.state.animals.activeItem.species,
+        ANIMAL_CURRENTMARKER: this.$store.state.animals.activeItem.field_data
+          .ANIMAL_CURRENTMARKER,
+        ANIMAL_IDENTIFYINGMARKERSTARTDATE: this.$store.state.animals.activeItem
+          .field_data.ANIMAL_IDENTIFYINGMARKERSTARTDATE,
+        ANIMAL_ORIGINALMARKER: this.$store.state.animals.activeItem.field_data
+          .ANIMAL_ORIGINALMARKER,
+      },
+    };
+  },
+
   methods: {
     saveChanges(evt) {
       evt.preventDefault();
@@ -68,34 +63,34 @@ export default {
             this.$store.state.animals.activeItem.animal_id,
           {
             headers: {
-              Authorization: this.$auth.$storage._state["_token.local"]
-            }
+              Authorization: this.$auth.$storage._state["_token.local"],
+            },
           }
         )
-        .then(function(result) {
+        .then(function (result) {
           console.log(self.form.Species);
           if (self.form.Species === "") {
             self.form.Species = document
               .getElementById("input_Species")
-              .getAttribute("placeholder");
+              .getAttribute("v-model");
           }
           console.log(self.form.Species);
           console.log(self.form.ANIMAL_IDENTIFYINGMARKERSTARTDATE);
           if (self.form.ANIMAL_IDENTIFYINGMARKERSTARTDATE === "") {
             self.form.ANIMAL_IDENTIFYINGMARKERSTARTDATE = document
               .getElementById("input_ANIMAL_IDENTIFYINGMARKERSTARTDATE")
-              .getAttribute("placeholder");
+              .getAttribute("v-model");
           }
           console.log(self.form.ANIMAL_IDENTIFYINGMARKERSTARTDATE);
           if (self.form.ANIMAL_ORIGINALMARKER === "") {
             self.form.ANIMAL_ORIGINALMARKER = document
               .getElementById("input_ANIMAL_ORIGINALMARKER")
-              .getAttribute("placeholder");
+              .getAttribute("v-model");
           }
           if (self.form.ANIMAL_CURRENTMARKER === "") {
             self.form.ANIMAL_CURRENTMARKER = document
               .getElementById("input_ANIMAL_CURRENTMARKER")
-              .getAttribute("placeholder");
+              .getAttribute("v-model");
 
             var payload = {
               species: self.form.Species,
@@ -103,8 +98,8 @@ export default {
                 ANIMAL_IDENTIFYINGMARKERSTARTDATE:
                   self.form.ANIMAL_IDENTIFYINGMARKERSTARTDATE,
                 ANIMAL_ORIGINALMARKER: self.form.ANIMAL_ORIGINALMARKER,
-                ANIMAL_CURRENTMARKER: self.form.ANIMAL_CURRENTMARKER
-              }
+                ANIMAL_CURRENTMARKER: self.form.ANIMAL_CURRENTMARKER,
+              },
             };
             self.$store.commit("animals/update", payload);
 
@@ -112,7 +107,7 @@ export default {
               ANIMAL_IDENTIFYINGMARKERSTARTDATE:
                 self.form.ANIMAL_IDENTIFYINGMARKERSTARTDATE,
               ANIMAL_ORIGINALMARKER: self.form.ANIMAL_ORIGINALMARKER,
-              ANIMAL_CURRENTMARKER: self.form.ANIMAL_CURRENTMARKER
+              ANIMAL_CURRENTMARKER: self.form.ANIMAL_CURRENTMARKER,
             };
 
             var f_data = JSON.stringify(data);
@@ -125,10 +120,10 @@ export default {
                 species: self.form.Species,
                 field_data: f_data,
                 headers: {
-                  Authorization: self.$auth.$storage._state["_token.local"]
-                }
+                  Authorization: self.$auth.$storage._state["_token.local"],
+                },
               })
-              .then(function() {
+              .then(function () {
                 self.$router.push("taggeddata");
               });
           } else {
@@ -137,8 +132,8 @@ export default {
               field_data: {
                 ANIMAL_IDENTIFYINGMARKERSTARTDATE:
                   self.form.ANIMAL_IDENTIFYINGMARKERSTARTDATE,
-                ANIMAL_ORIGINALMARKER: self.form.ANIMAL_ORIGINALMARKER
-              }
+                ANIMAL_ORIGINALMARKER: self.form.ANIMAL_ORIGINALMARKER,
+              },
             };
             self.$store.commit("animals/update", payload);
 
@@ -146,7 +141,7 @@ export default {
               ANIMAL_IDENTIFYINGMARKERSTARTDATE:
                 self.form.ANIMAL_IDENTIFYINGMARKERSTARTDATE,
               ANIMAL_ORIGINALMARKER: self.form.ANIMAL_ORIGINALMARKER,
-              ANIMAL_CURRENTMARKER: self.form.ANIMAL_CURRENTMARKER
+              ANIMAL_CURRENTMARKER: self.form.ANIMAL_CURRENTMARKER,
             };
 
             var f_data = JSON.stringify(data);
@@ -159,16 +154,16 @@ export default {
                 species: self.form.Species,
                 field_data: f_data,
                 headers: {
-                  Authorization: self.$auth.$storage._state["_token.local"]
-                }
+                  Authorization: self.$auth.$storage._state["_token.local"],
+                },
               })
-              .then(function() {
+              .then(function () {
                 self.$router.push("taggeddata");
               });
           }
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -6,12 +6,7 @@
           <b-form-group id="Title" :label="'Editing User ID: ' + item.user_id"></b-form-group>
 
           <b-form-group id="input-group-1" label="Tag_ID" label-for="input-1">
-            <b-form-input
-              id="input_tag_id"
-              v-model="form.tag_id"
-              :placeholder="item.tag_id"
-              readonly
-            ></b-form-input>
+            <b-form-input id="input_tag_id" v-model="form.tag_id" readonly></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -19,20 +14,11 @@
             label="Tag_Read_Time (format: XXXX-XX-XXTXX:XX:XXZ)"
             label-for="input-2"
           >
-            <b-form-input
-              id="input_tag_read_time"
-              v-model="form.tag_read_time"
-              :placeholder="item.tag_read_time"
-            ></b-form-input>
+            <b-form-input id="input_tag_read_time" v-model="form.tag_read_time"></b-form-input>
           </b-form-group>
 
           <b-form-group id="input-group-3" label="Reader_ID" label-for="input-3">
-            <b-form-input
-              id="input_reader_id"
-              v-model="form.reader_id"
-              :placeholder="item.reader_id"
-              readonly
-            ></b-form-input>
+            <b-form-input id="input_reader_id" v-model="form.reader_id" readonly></b-form-input>
           </b-form-group>
 
           <b-button type="submit" variant="primary">Submit</b-button>
@@ -48,16 +34,16 @@ export default {
   data() {
     return {
       form: {
-        tag_id: "",
-        tag_read_time: "",
-        reader_id: ""
-      }
+        tag_id: this.$store.state.tagReads.activeItem.tag_id,
+        tag_read_time: this.$store.state.tagReads.activeItem.tag_read_time,
+        reader_id: this.$store.state.tagReads.activeItem.reader_id,
+      },
     };
   },
   computed: {
     item() {
       return this.$store.state.tagReads.activeItem;
-    }
+    },
   },
   methods: {
     saveChanges(evt) {
@@ -69,11 +55,11 @@ export default {
             this.$store.state.tagReads.activeItem.url,
           {
             headers: {
-              Authorization: this.$auth.$storage._state["_token.local"]
-            }
+              Authorization: this.$auth.$storage._state["_token.local"],
+            },
           }
         )
-        .then(function(result) {
+        .then(function (result) {
           if (self.form.tag_id === "") {
             self.form.tag_id = document
               .getElementById("input_tag_id")
@@ -91,7 +77,7 @@ export default {
           }
 
           var payload = {
-            tag_read_time: self.form.tag_read_time
+            tag_read_time: self.form.tag_read_time,
           };
           self.$store.commit("tagReads/update", payload);
           console.log(result);
@@ -105,20 +91,20 @@ export default {
               tag_read_time: self.form.tag_read_time,
               reader_id: self.form.reader_id,
               headers: {
-                Authorization: self.$auth.$storage._state["_token.local"]
-              }
+                Authorization: self.$auth.$storage._state["_token.local"],
+              },
             })
-            .then(function() {
+            .then(function () {
               self.$router.push("rfidreads");
             })
-            .catch(function(response) {
+            .catch(function (response) {
               //handle error
               console.log(response);
               console.log("check format");
             });
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

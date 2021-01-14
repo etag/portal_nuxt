@@ -6,20 +6,11 @@
           <b-form-group id="Title" :label="'Editing User ID: ' + item.user_id"></b-form-group>
 
           <b-form-group id="input-group-1" label="Reader_ID" label-for="input-1">
-            <b-form-input
-              id="Reader_ID"
-              v-model="form.Reader_ID"
-              :placeholder="item.reader_id"
-              readonly
-            ></b-form-input>
+            <b-form-input id="Reader_ID" v-model="form.Reader_ID" readonly></b-form-input>
           </b-form-group>
 
           <b-form-group id="input-group-2" label="Description" label-for="input-2">
-            <b-form-input
-              id="Description"
-              v-model="form.Description"
-              :placeholder="item.description"
-            ></b-form-input>
+            <b-form-input id="Description" v-model="form.Description"></b-form-input>
           </b-form-group>
 
           <b-form-group id="input-group-3" label="Start Timestamp" label-for="input-3">
@@ -54,28 +45,28 @@ export default {
   data() {
     return {
       form: {
-        Reader_ID: "",
-        Description: "",
+        Reader_ID: this.$store.state.readers.activeItem.reader_id,
+        Description: this.$store.state.readers.activeItem.description,
         cor_lat: "",
-        cor_lon: ""
+        cor_lon: "",
       },
       timestamp: {
         start: "",
-        end: ""
+        end: "",
       },
       coordinates: {
         lat: "",
-        lon: ""
+        lon: "",
       },
       location: {
-        exist: false
-      }
+        exist: false,
+      },
     };
   },
   computed: {
     item() {
       return this.$store.state.readers.activeItem;
-    }
+    },
   },
   async fetch() {
     var self = this;
@@ -85,10 +76,12 @@ export default {
           this.item.reader_id +
           "&format=json",
         {
-          headers: { Authorization: this.$auth.$storage._state["_token.local"] }
+          headers: {
+            Authorization: this.$auth.$storage._state["_token.local"],
+          },
         }
       )
-      .then(function(reader_data) {
+      .then(function (reader_data) {
         try {
           self.timestamp.start = reader_data.data.results[0].start_timestamp;
           self.timestamp.end = reader_data.data.results[0].end_timestamp;
@@ -98,7 +91,7 @@ export default {
                 reader_data.data.results[0].location_id +
                 "&format=json"
             )
-            .then(function(location_data) {
+            .then(function (location_data) {
               self.coordinates.lat = location_data.data.results[0].latitude;
               self.coordinates.long = location_data.data.results[0].longitude;
               self.location.exist = true;
@@ -121,11 +114,11 @@ export default {
             this.$store.state.readers.activeItem.reader_id,
           {
             headers: {
-              Authorization: this.$auth.$storage._state["_token.local"]
-            }
+              Authorization: this.$auth.$storage._state["_token.local"],
+            },
           }
         )
-        .then(function(result) {
+        .then(function (result) {
           self.form.Reader_ID = self.$store.state.readers.activeItem.reader_id;
           if (typeof self.form.Description == "undefined") {
             self.form.Description = document
@@ -155,7 +148,7 @@ export default {
 
           var payload = {
             description: self.form.Description,
-            reader_id: self.form.Reader_ID
+            reader_id: self.form.Reader_ID,
           };
 
           self.$store.commit("readers/update", payload);
@@ -165,8 +158,8 @@ export default {
             description: self.form.Description,
             user_id: self.$store.state.readers.activeItem.user_id,
             headers: {
-              Authorization: self.$auth.$storage._state["_token.local"]
-            }
+              Authorization: self.$auth.$storage._state["_token.local"],
+            },
           });
           if (self.location.exist == false) {
             // This item has no cooresponding reader location or locations item
@@ -178,8 +171,8 @@ export default {
                 start_timestamp: self.form.time_s,
                 end_timestamp: self.form.time_e,
                 headers: {
-                  Authorization: self.$auth.$storage._state["_token.local"]
-                }
+                  Authorization: self.$auth.$storage._state["_token.local"],
+                },
               }
             );
 
@@ -189,15 +182,15 @@ export default {
                 latitude: self.form.cor_lat,
                 longitude: self.form.cor_long,
                 headers: {
-                  Authorization: self.$auth.$storage._state["_token.local"]
-                }
+                  Authorization: self.$auth.$storage._state["_token.local"],
+                },
               }
             );
           }
           self.$router.push("readerdata");
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
